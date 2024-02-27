@@ -5,7 +5,7 @@ const getDBConnection = async () => {
     host: 'localhost',
     user: 'root',
     password: 'root',
-    database: 'dripstore',
+    database: 'dripstore2',
     port: 3307,
   });
 
