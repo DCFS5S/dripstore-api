@@ -1,75 +1,99 @@
-const mysql = require('mysql2/promise');
+const mysql = require('mysql2/promise')
 
 const getDBConnection = async () => {
   const connection = await mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: 'root',
-    database: 'database_name',
+    database: 'dripstore',
     port: 3307,
   });
 
   return connection;
 }
 
+// Create
+const createProductController = async (request, response) => {
+  const connection = await getDBConnection()
+  const { nome, preco } = request.body;
 
-const createProductController = (request, response) => {
-    const newProduct = {
-      id: (+products[products.length - 1].id + 1).toString(),
-      name: 'ok',
-      price: 200.00,
-    }
-  
-    products.push(newProduct);
-  
-    response.json(newProduct);
-  }
-  const showProductController = (request, response) => {
-    const selectedProduct = products
-      .find(p => p.id === request.params.productId)
-  
-    if (selectedProduct) {
-      response.json(selectedProduct)
-    } else {
-      response.status(404)
-      response.json({
-        error: 'Produto não encontrado'
-      })
-    }
-  }
-  const listProductController = async (request, response) => {
-    const connection = await getDBConnection();
+  const [results, fields] = await connection.query(
+    `INSERT INTO tb_produto (nome, preco) VALUES (?, ?)`,
+    [nome, preco]
+  )
 
+  console.log(results);
+
+    response.json('Seu produto foi adicionado com sucesso!')
+  }
+
+//Show
+const showProductController = async (request, response) => {
+  const connection = await getDBConnection()
+  let id = request.params.productId
+    
+  const [results, fields] = await connection.query(
+    `SELECT * FROM tb_produto WHERE id=${id}`
+  )
+
+  console.log(results);
+
+  response.json(results)
+}
+
+//List
+const listProductController = async (request, response) => {
+  const connection = await getDBConnection()
+
+  const [results, fields] = await connection.query(
+    'SELECT * FROM tb_produto'
+  )
+
+  console.log(results)
+
+  response.json({ produto: results })
+}
+
+//Delete
+const deleteProductController = async (request, response) => {
+  const connection = await getDBConnection()
+  let id = request.params.productId
+
+  try {
     const [results, fields] = await connection.query(
-      'SELECT * FROM aluno'
-    );
-  
-    console.log(results);
+      `DELETE FROM tb_produto WHERE id = ${id} ` 
+    )
 
-    response.json({ alunos: results });
+    console.log('Seu produto foi removido com sucesso!')
+    response.status(200).send('Produto removido com sucesso!')
+  } catch (error) {
+    console.error('Erro ao remover produto:', error)
+    response.status(500).send('Erro ao remover produto')
+  } finally {
+    connection.end()
   }
+}
 
-  const deleteProductController = (request, response) => {
-    const newProducts = products
-      .filter(product => product.id !== request.params.productId)
-  
-    if (newProducts.length === products.length) {
-      response.status(404)
-      response.json({
-        message: 'Produto não encontrado',
-      })    
-    } else {
-      products = newProducts
-      response.json({
-        message: 'Produto removido com sucesso!',
-      })
-    }
-  
-  }
+//Update
+const updateProductController = async (request, response) => {
+  const connection = await getDBConnection()
+  let id = request.params.productId
+  const { nome, preco } = request.body;
 
-  module.exports = {
-    createProductController,
-    showProductController,
-    listProductController,
-    deleteProductController,
-  }
+  const [results, fields] = await connection.query(
+    `UPDATE tb_produto set nome = ?, preco = ? where id = ${id}`,
+    [ nome, preco, id]
+  )
+
+  console.log(results);
+
+  response.json('Seu produto foi alterado com sucesso!')
+}
+
+module.exports = {
+  createProductController,
+  showProductController,
+  listProductController,
+  deleteProductController,
+  updateProductController,
+}
