@@ -1,75 +1,114 @@
-const mysql = require('mysql2/promise');
+const { getDBConnection } = require("../utils/getDBConnection");
 
-const getDBConnection = async () => {
-  const connection = await mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'root',
-    database: 'database_name',
-    port: 3307,
-  });
 
-  return connection;
+const list = async (request, response) => {
+  const connection = await getDBConnection();
+
+  const [results] = await connection.query(
+    'SELECT * FROM product'
+  );
+
+  response.json({ products: results });
 }
 
+const show = async (request, response) => {
+  const connection = await getDBConnection();
+  const { productId } = request.params;
 
-const createProductController = (request, response) => {
-    const newProduct = {
-      id: (+products[products.length - 1].id + 1).toString(),
-      name: 'ok',
-      price: 200.00,
-    }
-  
-    products.push(newProduct);
-  
-    response.json(newProduct);
-  }
-  const showProductController = (request, response) => {
-    const selectedProduct = products
-      .find(p => p.id === request.params.productId)
-  
-    if (selectedProduct) {
-      response.json(selectedProduct)
-    } else {
-      response.status(404)
-      response.json({
-        error: 'Produto não encontrado'
-      })
-    }
-  }
-  const listProductController = async (request, response) => {
-    const connection = await getDBConnection();
+  const [results] = await connection.query(
+    'SELECT * FROM product JOIN category WHERE product.id = ?', [productId]
+  );
 
-    const [results, fields] = await connection.query(
-      'SELECT * FROM aluno'
+  const [ selectedProduct ] = results;
+
+  if (selectedProduct) {
+    response.json(selectedProduct)
+  } else {
+    response.status(404)
+    response.json({
+      error: 'Produto não encontrado'
+    })
+  }
+}
+
+const create = async (request, response) => {
+  const connection = await getDBConnection();
+  const { name, price, categories = [] } = request.body;
+
+  const [results] = await connection.query(
+    'INSERT INTO product (name, price) VALUES (?, ?)',
+    [name, price]
+  );
+
+  if (categories.length > 0) {
+    await connection.query(
+      'INSERT INTO product_category (product_id, category_id) VALUES '
+      + categories.map(() => '(?, ?)').join(', '),
+      categories.flatMap(categoryId => [results.insertId, categoryId]) 
     );
-  
-    console.log(results);
-
-    response.json({ alunos: results });
   }
 
-  const deleteProductController = (request, response) => {
-    const newProducts = products
-      .filter(product => product.id !== request.params.productId)
-  
-    if (newProducts.length === products.length) {
-      response.status(404)
-      response.json({
-        message: 'Produto não encontrado',
-      })    
-    } else {
-      products = newProducts
-      response.json({
-        message: 'Produto removido com sucesso!',
-      })
-    }
-  
+  response.status(201);
+  response.json();
+}
+
+const remove = async (request, response) => {
+  const connection = await getDBConnection();
+  const { productId } = request.params;
+
+  const [results] = await connection.query(
+    'DELETE FROM product WHERE id = ?',
+    [productId]
+  );
+
+  if (results.affectedRows === 0) {
+    response.status(404)
+    response.json({
+      message: 'Produto não encontrado',
+    })    
+  } else {
+    response.json({
+      message: 'Produto removido com sucesso!',
+    })
+  }
+}
+
+const update = async (request, response) => {
+  const connection = await getDBConnection();
+  const { productId } = request.params;
+
+  const [results] = await connection.query(
+    'SELECT name, price FROM product WHERE id = ?',
+    [productId]
+  );
+
+  const {name, price } = {
+    ...results[0],
+    ...request.body,
+  };
+
+  const [{ affectedRows }] = await connection.query(
+    'UPDATE product set name=?, price=? WHERE id = ? LIMIT 1',
+    [name, price, productId]
+  );
+
+  if (affectedRows === 0) {
+    response.status(404)
+    response.json({
+      message: 'Produto não encontrado',
+    })    
+  } else {
+    response.json({
+      message: 'Produto atualizado com sucesso!',
+    })
   }
 
-  module.exports = {
-    createProductController,
-    showProductController,
-    listProductController,
-    deleteProductController,
-  }
+}
+
+module.exports = {
+  create,
+  show,
+  list,
+  remove,
+  update,
+}
