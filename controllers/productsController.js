@@ -22,20 +22,11 @@ const show = async (request, response) => {
 }
 
 const create = async (request, response) => {
-  const connection = await getDBConnection();
   const { name, price, categories = [] } = request.body;
 
-  const [results] = await connection.query(
-    'INSERT INTO product (name, price) VALUES (?, ?)',
-    [name, price]
-  );
-
+  const productId = await Product.createOne(name, price);
   if (categories.length > 0) {
-    await connection.query(
-      'INSERT INTO product_category (product_id, category_id) VALUES '
-      + categories.map(() => '(?, ?)').join(', '),
-      categories.flatMap(categoryId => [results.insertId, categoryId]) 
-    );
+    Product.addCategory(productId, categories);
   }
 
   response.status(201);
