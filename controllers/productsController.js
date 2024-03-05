@@ -1,25 +1,15 @@
 const { getDBConnection } = require("../utils/getDBConnection");
-
+const Product = require("../models/Product");
 
 const list = async (request, response) => {
-  const connection = await getDBConnection();
+  const productList = await Product.getAll();
 
-  const [results] = await connection.query(
-    'SELECT * FROM product'
-  );
-
-  response.json({ products: results });
+  response.json({ products: productList });
 }
 
 const show = async (request, response) => {
-  const connection = await getDBConnection();
   const { productId } = request.params;
-
-  const [results] = await connection.query(
-    'SELECT * FROM product JOIN category WHERE product.id = ?', [productId]
-  );
-
-  const [ selectedProduct ] = results;
+  const selectedProduct = await Product.getOne(productId)
 
   if (selectedProduct) {
     response.json(selectedProduct)
