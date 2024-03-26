@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "nodemon ./bin/www",
-    "test": "jest ."
+    "test": "jest .",
+    "test:coverage": "jest . --coverage"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",

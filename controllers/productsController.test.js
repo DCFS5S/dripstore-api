@@ -21,7 +21,9 @@ const productListMock = [
 
 jest.mock("../models/Product", () => ({
   getAll: () => productListMock,
-  getOne: jest.fn(() => productListMock[0])
+  getOne: jest.fn(() => productListMock[0]),
+  createOne: jest.fn(() => 321),
+  addCategory: jest.fn(), 
 }))
 
 describe('productsController', () => {
@@ -56,6 +58,54 @@ describe('productsController', () => {
       expect(responseMock.json).toHaveBeenCalledWith({
         error: 'Produto não encontrado'
       })
+    })
+  })
+
+  describe('create', () => {
+    it('creates a product without categories', async () => {
+      const noCategoryRequestMock = {
+        body: {
+          name: 'Produto 1',
+          price: 100.00,
+        }
+      }
+
+      await productsController.create(noCategoryRequestMock, responseMock);
+
+
+      expect(Product.createOne).toHaveBeenCalledWith(
+        noCategoryRequestMock.body.name,
+        noCategoryRequestMock.body.price,
+      );
+      expect(Product.addCategory).not.toHaveBeenCalled();
+      expect(responseMock.status).toHaveBeenCalledWith(201);
+      expect(responseMock.json).toHaveBeenCalled();
+    })
+
+    it('creates a product with categories', async () => {
+      const categoryRequestMock = {
+        body: {
+          name: 'Produto 1',
+          price: 100.00,
+          categories: [{id: 1}, {id: 2}]
+        }
+      }
+
+      await productsController.create(categoryRequestMock, responseMock);
+
+
+      expect(Product.createOne).toHaveBeenCalledWith(
+        categoryRequestMock.body.name,
+        categoryRequestMock.body.price,
+      );
+
+      expect(Product.addCategory).toHaveBeenCalledWith(
+        321,
+        categoryRequestMock.body.categories,
+      );
+
+      expect(responseMock.status).toHaveBeenCalledWith(201);
+      expect(responseMock.json).toHaveBeenCalled();
     })
   })
 })
