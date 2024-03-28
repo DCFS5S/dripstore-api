@@ -58,13 +58,13 @@ const update = async (request, response) => {
   const connection = await getDBConnection();
   const { productId } = request.params;
 
-  const [results] = await connection.query(
+  const results = await connection.query(
     'SELECT name, price FROM product WHERE id = ?',
     [productId]
   );
 
   const { name, price } = {
-    ...results[0],
+    ...results[0][0],
     ...request.body,
   };
 
@@ -72,6 +72,7 @@ const update = async (request, response) => {
     'UPDATE product set name=?, price=? WHERE id = ? LIMIT 1',
     [name, price, productId]
   );
+
 
   if (affectedRows === 0) {
     response.status(404)

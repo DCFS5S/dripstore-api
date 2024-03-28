@@ -121,7 +121,7 @@ describe('productsController', () => {
 
   describe('remove', () => {
     it('removes an existing product', async () => {
-      connectionQueryMock.mockImplementation(() => [{
+      connectionQueryMock.mockReturnValue([{
         affectedRows: 1
       }])
 
@@ -133,7 +133,7 @@ describe('productsController', () => {
     })
 
     it('tries to remove an unexisting product', async () => {
-      connectionQueryMock.mockImplementation(() => [{
+      connectionQueryMock.mockReturnValue([{
         affectedRows: 0
       }])
 
@@ -144,5 +144,25 @@ describe('productsController', () => {
         message: 'Produto não encontrado'
       })
     })
+  })
+
+  describe('update', () => {
+    it('updates name and price from a existing product', async () => {
+      connectionQueryMock
+        .mockReturnValueOnce([[
+          {
+            name: 'ok',
+            price: 123
+          }
+        ]])
+        .mockReturnValue([{
+          affectedRows: 0
+        }])
+
+      await productsController.remove(requestMock, responseMock);
+
+    })
+    it('updates only price from a existing product', async () => {})
+    it('tries to update an unexisting product', async () => {})
   })
 })
