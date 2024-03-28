@@ -19,12 +19,22 @@ const productListMock = [
   { id: 4 },
 ]
 
-jest.mock("../models/Product", () => ({
-  getAll: () => productListMock,
-  getOne: jest.fn(() => productListMock[0]),
-  createOne: jest.fn(() => 321),
-  addCategory: jest.fn(), 
-}))
+const connectionQueryMock = jest.fn()
+const getDBConnectionMock = () => ({
+  query: connectionQueryMock
+})
+
+
+jest
+  .mock("../models/Product", () => ({
+    getAll: () => productListMock,
+    getOne: jest.fn(() => productListMock[0]),
+    createOne: jest.fn(() => 321),
+    addCategory: jest.fn(), 
+  }))
+  .mock("../utils/getDBConnection", () => ({
+    getDBConnection: getDBConnectionMock
+  }))
 
 describe('productsController', () => {
   beforeEach(() => {
@@ -106,6 +116,33 @@ describe('productsController', () => {
 
       expect(responseMock.status).toHaveBeenCalledWith(201);
       expect(responseMock.json).toHaveBeenCalled();
+    })
+  })
+
+  describe('remove', () => {
+    it('removes an existing product', async () => {
+      connectionQueryMock.mockImplementation(() => [{
+        affectedRows: 1
+      }])
+
+      await productsController.remove(requestMock, responseMock);
+      
+      expect(responseMock.json).toHaveBeenCalledWith({
+        message: 'Produto removido com sucesso!'
+      })
+    })
+
+    it('tries to remove an unexisting product', async () => {
+      connectionQueryMock.mockImplementation(() => [{
+        affectedRows: 0
+      }])
+
+      await productsController.remove(requestMock, responseMock);
+
+      expect(responseMock.status).toHaveBeenCalledWith(404)
+      expect(responseMock.json).toHaveBeenCalledWith({
+        message: 'Produto não encontrado'
+      })
     })
   })
 })
