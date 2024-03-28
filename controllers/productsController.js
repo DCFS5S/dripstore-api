@@ -63,7 +63,7 @@ const update = async (request, response) => {
     [productId]
   );
 
-  const {name, price } = {
+  const { name, price } = {
     ...results[0],
     ...request.body,
   };
