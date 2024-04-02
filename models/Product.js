@@ -2,7 +2,7 @@ const { getDBConnection } = require("../utils/getDBConnection");
 
 const Product = {
     getAll: async () => {
-       const connection = await getDBConnection();
+        const connection = await getDBConnection();
         const [results] = await connection.query(
             'SELECT * FROM product'
         );
