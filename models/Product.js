@@ -28,21 +28,37 @@ const Product = {
                 product_variant.size AS variant_size,
                 product_variant.color_name AS variant_color_name,
                 product_variant.color_hex AS variant_color_hex,
-                product_variant.stock AS variant_stock
+                product_variant.stock AS variant_stock,
+                image.url AS url_image
             FROM 
                 product
             INNER JOIN 
                 brand ON product.brand_id = brand.id
-            INNER JOIN 
+            LEFT JOIN 
                 category ON product.category_id = category.id
-            INNER JOIN 
+            LEFT JOIN 
                 product_variant ON product.id = product_variant.product_id
-            WHERE product_id = ?;
+            LEFT JOIN
+                image ON product.id = image.product_id
+            WHERE product.id = ?;
             `, [productId]
             );
             
-        const [ selectedProduct ] = results;
-
+        const [ selectedProduct ] = results; 
+        let variants = results.map(result => ({
+            id: result.variant_id,
+            size: result.variant_size,
+            color_name: result.variant_color_name,
+            color_hex: result.variant_color_hex,
+            stock: result.variant_stock,
+        }))
+        variants = variants.filter((variant, index , newVariants) => {
+            return newVariants.includes(variant) && variant.id
+        }) 
+        let images = results.map(result => result.url_image)
+        images = images.filter((image, index, newImages) => {
+            return newImages.includes(image) 
+        })
         const productData = ({
             id: selectedProduct.product_id,
             name: selectedProduct.product_name,
@@ -57,14 +73,8 @@ const Product = {
                 id: selectedProduct.category_id,
                 name: selectedProduct.category_name,
             },
-            variants: results.map(result => ({
-                id: result.variant_id,
-                size: result.variant_size,
-                color_name: result.variant_color_name,
-                color_hex: result.variant_color_hex,
-                stock: result.variant_stock,
-            })),
-            images: [] // TODO: Implement images data
+            variants,
+            images
         });
         
         return productData;
