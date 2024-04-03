@@ -29,7 +29,7 @@ const Product = {
                 product_variant.color_name AS variant_color_name,
                 product_variant.color_hex AS variant_color_hex,
                 product_variant.stock AS variant_stock,
-                image.url AS url_image
+                product_image.url AS url_image
             FROM 
                 product
             INNER JOIN 
@@ -39,26 +39,31 @@ const Product = {
             LEFT JOIN 
                 product_variant ON product.id = product_variant.product_id
             LEFT JOIN
-                image ON product.id = image.product_id
+                product_image ON product.id = image.product_id
             WHERE product.id = ?;
             `, [productId]
             );
             
-        const [ selectedProduct ] = results; 
-        let variants = results.map(result => ({
-            id: result.variant_id,
-            size: result.variant_size,
-            color_name: result.variant_color_name,
-            color_hex: result.variant_color_hex,
-            stock: result.variant_stock,
-        }))
-        variants = variants.filter((variant, index , newVariants) => {
-            return newVariants.includes(variant) && variant.id
-        }) 
+        const [ selectedProduct ] = results;
+
+        const variants = Array.from(new Set(results.map(result => result.variant_id)))
+            .map(variant_id => {
+                const result = results.find(product => product.variant_id === variant_id)
+
+                return {
+                    id: variant_id,
+                    size: result.variant_size,
+                    color_name: result.variant_color_name,
+                    color_hex: result.variant_color_hex,
+                    stock: result.variant_stock,
+                }
+            })
+
         let images = results.map(result => result.url_image)
         images = images.filter((image, index, newImages) => {
-            return newImages.includes(image) 
+            return newImages.indexOf(image) === index
         })
+
         const productData = ({
             id: selectedProduct.product_id,
             name: selectedProduct.product_name,
