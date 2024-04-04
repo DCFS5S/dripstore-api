@@ -39,7 +39,7 @@ const Product = {
             LEFT JOIN 
                 product_variant ON product.id = product_variant.product_id
             LEFT JOIN
-                product_image ON product.id = image.product_id
+                product_image ON product.id = product_image.id
             WHERE product.id = ?;
             `, [productId]
             );
