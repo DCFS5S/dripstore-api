@@ -1,12 +1,13 @@
-const { getDBConnection } = require("../utils/getDBConnection");
-const Product = require("../models/Order");
+// const { getDBConnection } = require("../utils/getDBConnection");
+
+const Order = require("../models/Order");
 
 const showCart = async (request, response) => {
-  const { productId } = request.params;
-  const selectedProduct = await Orders.getOne(productId)
+  const { orderId } = request.params;
+  const selectedOrder = await Order.getOne(orderId)
 
-  if (selectedProduct) {
-    response.json(selectedProduct)
+  if (selectedOrder) {
+    response.json(selectedOrder)
   } else {
     response.status(404)
     response.json({
@@ -16,5 +17,5 @@ const showCart = async (request, response) => {
 }
 
 module.exports = {
-  showOrders,
+  showCart,
 }
