@@ -1,30 +1,33 @@
-const { getDBConnection } = require("../utils/getDBConnection");
-
-const User = {
-    createOne: async (newUser) => {
-        const connection = await getDBConnection();
-
-        const {
-            name,
-            cpf,
-            email,
-            password,
-            cel,
-            address,
-            neighborhood,
-            city,
-            zip,
-            address_complement,
-            registration_date
-        } = newUser
-
-        const [results] = await connection.query(
-            'INSERT INTO user (name, cpf, email, password, cel, address, neighborhood, city, zip, address_complement, registration_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            [name, cpf, email, password, cel, address, neighborhood, city, zip, address_complement, registration_date]
-        );
-
-        return results.insertId
-    },
-}
-
-module.exports = User;
+'use strict';
+const {
+  Model
+} = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
+  class User extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
+    }
+  }
+  User.init({
+    name: DataTypes.STRING,
+    cpf: DataTypes.STRING,
+    email: DataTypes.STRING,
+    password: DataTypes.STRING,
+    cel: DataTypes.STRING,
+    address: DataTypes.STRING,
+    neighbourhood: DataTypes.STRING,
+    city: DataTypes.STRING,
+    zip: DataTypes.STRING,
+    address_complement: DataTypes.STRING,
+    registration_date: DataTypes.STRING
+  }, {
+    sequelize,
+    modelName: 'User',
+  });
+  return User;
+};

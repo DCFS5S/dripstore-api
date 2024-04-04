@@ -3,6 +3,7 @@ const productController = require('../controllers/productsController');
 const categoriesController = require('../controllers/categoriesController');
 const userController = require('../controllers/userController');
 
+
 router.get('/products', productController.list)
 router.get('/products/:productId', productController.show)
 router.post('/products', productController.create)
@@ -13,5 +14,6 @@ router.get('/categories', categoriesController.list)
 router.post('/categories', categoriesController.create)
 
 router.post('/register', userController.create)
+router.get('/login', )
 
 module.exports = router;
