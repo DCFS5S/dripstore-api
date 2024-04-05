@@ -1,4 +1,4 @@
-const Product = require("../models/Product");
+const Product = require("../models/Product")();
 const productsController = require('./productsController')
 
 const responseMock = {
