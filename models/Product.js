@@ -1,6 +1,6 @@
 const { getDBConnection } = require("../utils/getDBConnection");
 
-const Product = {
+const Product = (sequelize, DataTypes) => ({
     getAll: async () => {
         const connection = await getDBConnection();
         const [results] = await connection.query(
@@ -103,6 +103,6 @@ const Product = {
             categories.flatMap(categoryId => [productId, categoryId]) 
           );
     }
-}
+})
 
 module.exports = Product;
