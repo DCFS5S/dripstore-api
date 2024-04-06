@@ -22,9 +22,24 @@ const show = async (request, response) => {
 }
 
 const create = async (request, response) => {
-  const { name, price, categories = [] } = request.body;
+  const { name, price, description, categories = [], slug = false, brandId } = request.body;
+  let finalSlug = "" 
+  if (!slug) {
+    function slugify(str) {
+      return String(str)
+        .normalize('NFKD') // split accented characters into their base characters and diacritical marks
+        .replace(/[\u0300-\u036f]/g, '') // remove all the accents, which happen to be all in the \u03xx UNICODE block.
+        .trim() // trim leading or trailing whitespace
+        .toLowerCase() // convert to lowercase
+        .replace(/[^a-z0-9 -]/g, '') // remove non-alphanumeric characters
+        .replace(/\s+/g, '-') // replace spaces with hyphens
+        .replace(/-+/g, '-'); // remove consecutive hyphens
+    }
+    finalSlug = slugify(name)
+    console.log(finalSlug)
+  }
 
-  const productId = await Product.createOne(name, price);
+  const productId = await Product.createOne(name, price, description, finalSlug, brandId);
   if (categories.length > 0) {
     Product.addCategory(productId, categories);
   }

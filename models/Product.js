@@ -84,12 +84,12 @@ const Product = (sequelize, DataTypes) => ({
         
         return productData;
     },
-    createOne: async (name, price) => {
+    createOne: async (name, price, description, slug, brandId ) => {
         const connection = await getDBConnection();
 
         const [results] = await connection.query(
-            'INSERT INTO product (name, price) VALUES (?, ?)',
-            [name, price]
+            'INSERT INTO product (name, price, description, slug, brand_id) VALUES (?, ?, ?, ?, ?)',
+            [name, price, description, slug, brandId]
         );
 
         return results.insertId
