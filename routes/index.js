@@ -15,5 +15,6 @@ router.post('/categories', categoriesController.create)
 
 // router.get('/orders/:orderId', ordersController.show)
 router.get('/cart', ordersController.showCart)
+router.get('/cart/:orderId', ordersController.showCart)
 
 module.exports = router;

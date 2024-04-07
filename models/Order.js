@@ -1,11 +1,12 @@
 const { getDBConnection } = require("../utils/getDBConnection");
 
 const Order = {
-  getOne: async () => {
+  getOne: async (orderId) => {
     const connection = await getDBConnection();
-
+    
     const [results] = await connection.query(
-        'SELECT * FROM product'
+      'SELECT * FROM product WHERE id = ?',
+      [orderId]
     );
 
     return results
