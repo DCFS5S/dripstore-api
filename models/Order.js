@@ -8,8 +8,16 @@ const Order = {
       'SELECT * FROM product WHERE id = ?',
       [orderId]
     );
+    return results;
+  },
+  remove: async (orderId) => {
+    const connection = await getDBConnection();
 
-    return results
+    const [results] = await connection.query(
+      'DELETE FROM product WHERE id = ?',
+      [orderId]
+    );
+    return results;
   }
 }
 

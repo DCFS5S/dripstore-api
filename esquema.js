@@ -21,3 +21,11 @@ const pedido = {
   status: 'Finalizado',
   nomeDoProduto: 'name'
 }
+
+const order = {
+  // COLUNAS
+  id,
+  number,
+  status: ['pagemento efetuado', 'produto em transito', 'finalizado', 'cancelado'],
+  product_name
+}
