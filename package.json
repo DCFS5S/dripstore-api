@@ -5,7 +5,9 @@
   "scripts": {
     "start": "nodemon ./bin/www",
     "test": "jest .",
-    "test:coverage": "jest . --coverage"
+    "test:coverage": "jest . --coverage",
+    "db:migrate": "sequelize-cli db:migrate",
+    "db:seed": "sequelize-cli db:seed:all"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
@@ -14,10 +16,12 @@
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
-    "mysql2": "^3.9.1"
+    "mysql2": "^3.9.1",
+    "sequelize": "^6.37.2"
   },
   "devDependencies": {
     "jest": "^29.7.0",
-    "nodemon": "^3.0.3"
+    "nodemon": "^3.0.3",
+    "sequelize-cli": "^6.6.2"
   }
 }

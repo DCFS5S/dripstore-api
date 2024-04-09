@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const productController = require('../controllers/productsController');
 const categoriesController = require('../controllers/categoriesController');
+const { Teste } = require('../models')
 
 const ordersController = require('../controllers/ordersController')
 
@@ -19,5 +20,10 @@ router.put('/cart/:orderId', ordersController.update)
 router.get('/cart', ordersController.showCart)
 router.get('/cart/:orderId', ordersController.showCart)
 router.delete('/cart/:orderId', ordersController.remove)
+
+router.get('/test', async (req, res) => {
+  const test = await Teste.findAll();
+  res.json(test)
+})
 
 module.exports = router;
