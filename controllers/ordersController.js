@@ -16,8 +16,33 @@ const create = async (request, response) => {
   }
 }
 
+const update = async (request, response) => {
+  const { orderId } = request.params;
+
+  const results = await Order.updateOne(orderId);
+
+  const { nome } = {
+    ...results[0][0],
+    ...request.body
+  }
+
+  const affectedRows = await Order.updateOne(orderId, nome)
+
+  if (affectedRows === 0) {
+    response.status(404)
+    response.json({
+      message: 'Produto não encontrado',
+    })
+  } else {
+    response.json({
+      message: 'Produto atualizado com sucesso',
+    })
+  }
+}
+
 const showCart = async (request, response) => {
   const { orderId } = request.params;
+
   const selectedOrder = await Order.getOne(orderId);
 
   if (selectedOrder) {
@@ -50,4 +75,5 @@ module.exports = {
   showCart,
   remove,
   create,
+  update,
 }

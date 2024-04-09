@@ -1,3 +1,5 @@
+const { request } = require("express");
+const { update } = require("../controllers/productsController");
 const { getDBConnection } = require("../utils/getDBConnection");
 
 const Order = {
@@ -9,6 +11,23 @@ const Order = {
       [nome, preco, imagem, cor, tamanho]
     );
     return results;
+  },
+  updateOne: async (orderId, nome) => {
+    const connection = await getDBConnection();
+
+    const [results] = await connection.query(
+      'SELECT nome FROM product WHERE id = ?',
+      [orderId]
+    );
+
+    if (results.length === 0) {
+      return results;
+    }
+    // await connection.query(
+    //   'UPDATE product SET nome = ? Where id = ? LIMIT 1',
+    //   [nome, orderId]
+    // );
+    // return 1;
   },
   getOne: async (orderId) => {
     const connection = await getDBConnection();

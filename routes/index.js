@@ -14,9 +14,10 @@ router.get('/categories', categoriesController.list)
 router.post('/categories', categoriesController.create)
 
 
+router.post('/cart', ordersController.create)
+router.put('/cart/orderId', ordersController.update)
 router.get('/cart', ordersController.showCart)
 router.get('/cart/:orderId', ordersController.showCart)
-router.post('/cart', ordersController.create)
 router.delete('/cart/:orderId', ordersController.remove)
 
 module.exports = router;
