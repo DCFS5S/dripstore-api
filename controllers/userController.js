@@ -1,6 +1,5 @@
-const { getDBConnection } = require("../utils/getDBConnection");
-const User = require("../models/User");
-const jwt = require('jsonwebtoken');
+const { User } = require("../models");
+const encrypt = require("../utils/encrypt");
 
 const create = async (request, response) => {
     const {
@@ -13,49 +12,33 @@ const create = async (request, response) => {
         neighborhood,
         city,
         zip,
-        address_complement,
-        registration_date = [] } = request.body;
+        addressComplement
+    } = request.body;
     
-    User.createOne({
-        name,
-        cpf,
-        email,
-        password,
-        cel,
-        address,
-        neighborhood,
-        city,
-        zip,
-        address_complement,
-        registration_date 
-    })
-    
-    response.status(201);
-    response.json();
-  }
-
-  const login = async (request, response) => {
-    const { email, password } = request.body;
-
     try {
-        const user = await User.findOne({ email });
-        if (!user) {
-            return response.status(401).json({ error: 'Usuário não encontrado' });
-        }
-        if (user.password !== password) {
-            return response.status(401).json({ error: 'Credenciais inválidas' });
-        }
-        const token = jwt.sign({ userId: user._id }, 'sua_chave_secreta', { expiresIn: '1h' });
         
-        response.json({ token });
+        const encryptedPassword = encrypt(password);
+
+        await User.create({
+            name,
+            cpf,
+            email,
+            password: encryptedPassword,
+            cel,
+            address,
+            neighborhood,
+            city,
+            zip,
+            addressComplement,
+        });
+
+        response.status(201).json({ message: 'Usuário criado com sucesso' });
     } catch (error) {
-        console.error('Erro ao fazer login:', error);
+        console.error('Erro ao criar usuário:', error);
         response.status(500).json({ error: 'Erro interno do servidor' });
     }
 };
 
-
 module.exports = {
     create,
-    login
 };

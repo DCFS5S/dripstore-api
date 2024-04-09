@@ -1,4 +1,4 @@
-const { getDBConnection } = require("../utils/getDBConnection");
+const { getDBConnection } = require("./utils/getDBConnection");
 
 const Product = {
     getAll: async () => {

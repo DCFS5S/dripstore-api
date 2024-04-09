@@ -36,10 +36,7 @@ module.exports = {
       zip: {
         type: Sequelize.STRING
       },
-      address_complement: {
-        type: Sequelize.STRING
-      },
-      registration_date: {
+      addressComplement: {
         type: Sequelize.STRING
       },
       createdAt: {

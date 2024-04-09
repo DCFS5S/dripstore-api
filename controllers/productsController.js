@@ -1,5 +1,5 @@
 const { getDBConnection } = require("../utils/getDBConnection");
-const Product = require("../models/Product");
+const Product = require("../Product");
 
 const list = async (request, response) => {
   const productList = await Product.getAll();
