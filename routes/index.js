@@ -14,6 +14,6 @@ router.get('/categories', categoriesController.list)
 router.post('/categories', categoriesController.create)
 
 router.post('/register', userController.create)
-router.get('/login', )
+router.post('/login', userController.login)
 
 module.exports = router;
