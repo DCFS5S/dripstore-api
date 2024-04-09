@@ -1,5 +1,21 @@
 const Order = require("../models/Order");
 
+const create = async (request, response) => {
+  const { nome, preco, imagem, cor, tamanho} = request.body;
+  const orderId = await Order.createOne(nome, preco, imagem, cor, tamanho)
+
+  if (orderId) {
+    response.json({
+      message: 'Produto criado com sucesso!',
+    })
+  } else {
+    response.status(404);
+    response.json({
+      message: 'Produto não encontrado',
+    })
+  }
+}
+
 const showCart = async (request, response) => {
   const { orderId } = request.params;
   const selectedOrder = await Order.getOne(orderId);
@@ -33,4 +49,5 @@ const remove = async (request, response) => {
 module.exports = {
   showCart,
   remove,
+  create,
 }

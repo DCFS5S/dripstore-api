@@ -1,6 +1,15 @@
 const { getDBConnection } = require("../utils/getDBConnection");
 
 const Order = {
+  createOne: async (nome, preco, imagem, cor, tamanho) => {
+    const connection = await getDBConnection();
+    
+    const [results] = await connection.query(
+      'INSERT INTO product (nome, preco, imagem, cor, tamanho) VALUES (?, ?, ?, ?, ?)',
+      [nome, preco, imagem, cor, tamanho]
+    );
+    return results;
+  },
   getOne: async (orderId) => {
     const connection = await getDBConnection();
     
