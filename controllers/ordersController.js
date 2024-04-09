@@ -18,24 +18,18 @@ const create = async (request, response) => {
 
 const update = async (request, response) => {
   const { orderId } = request.params;
+  const { nome } = request.body;
 
-  const results = await Order.updateOne(orderId);
+  const updateOrder = await Order.updateOne(orderId, nome);
 
-  const { nome } = {
-    ...results[0][0],
-    ...request.body
-  }
-
-  const affectedRows = await Order.updateOne(orderId, nome)
-
-  if (affectedRows === 0) {
-    response.status(404)
-    response.json({
-      message: 'Produto não encontrado',
-    })
-  } else {
+  if (updateOrder) {
     response.json({
       message: 'Produto atualizado com sucesso',
+    }) 
+  } else {
+    response.status(404)
+    response.json({
+      message: 'Produto não encontrado ou nenhum dado foi atualizado',
     })
   }
 }
