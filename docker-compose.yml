@@ -13,8 +13,6 @@ services:
       - 3008:3306
     volumes:
       - db:/var/lib/mysql
-    networks:
-      - mysql_network
 
   phpmyadmin:
     depends_on:
@@ -28,11 +26,7 @@ services:
     environment:
       - PMA_HOST=mysqldb
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
-    networks:
-      - mysql_network
 
 volumes:
   db:
 
-networks:
-  mysql_network:

@@ -5,7 +5,8 @@
   "scripts": {
     "start": "nodemon -r dotenv/config ./bin/www",
     "test": "jest .",
-    "test:coverage": "jest . --coverage"
+    "test:coverage": "jest . --coverage",
+    "db:migrate": "npx sequelize-cli db:migrate"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
