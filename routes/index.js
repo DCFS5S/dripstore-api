@@ -14,7 +14,6 @@ router.put('/products/:productId', productController.update)
 router.get('/categories', categoriesController.list)
 router.post('/categories', categoriesController.create)
 
-
 router.post('/cart', ordersController.create)
 router.put('/cart/:orderId', ordersController.update)
 router.get('/cart', ordersController.showCart)

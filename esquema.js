@@ -15,11 +15,11 @@ const cartProduct = {
 }
 
 
-const pedido = {
+const order = {
   id,
-  numeroDoPedido: Number,
-  status: 'Finalizado',
-  nomeDoProduto: 'name'
+  orderNumber: Number,
+  status: 'Fake',
+  productName: 'Tênis Nike Air'
 }
 
 const order = {
@@ -29,3 +29,8 @@ const order = {
   status: ['pagemento efetuado', 'produto em transito', 'finalizado', 'cancelado'],
   product_name
 }
+
+
+npx sequelize-cli model:generate --name Order --attributes status:string,tamanho:string,quantity:number,productName:string,price:integer
+
+npx sequelize-cli seed:generate --name demo-user
