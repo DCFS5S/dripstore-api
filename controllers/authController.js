@@ -1,7 +1,6 @@
 const { User } = require("../models");
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const encrypt = require("../utils/encrypt");
 
 const login = async (request, response) => {
     const { email, password } = request.body;
