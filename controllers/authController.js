@@ -14,7 +14,7 @@ const login = async (request, response) => {
 
         const passwordMatch = await bcrypt.compare(password, user.password);
         if (!passwordMatch) {
-            return response.status(401).json({ error: 'Credenciais inválidas' });
+            return response.status(401).json({ error: 'Senha inválida' });
         }
 
         const token = jwt.sign({ userId: user._id }, 'sua_chave_secreta', { expiresIn: '1h' });
