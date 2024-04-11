@@ -3,7 +3,7 @@ const productController = require('../controllers/productsController');
 const categoriesController = require('../controllers/categoriesController');
 const userController = require('../controllers/userController');
 const authController = require('../controllers/authController');
-const verifyToken = require('../middlewares/authMiddleware')
+const authMiddleware = require('../middlewares/authMiddleware')
 
 
 router.get('/products', productController.list)
@@ -16,6 +16,6 @@ router.get('/categories', categoriesController.list)
 router.post('/categories', categoriesController.create)
 
 router.post('/register', userController.create)
-router.post('/login', verifyToken ,authController.login)
+router.post('/login',authController.login)
 
 module.exports = router;

@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-function verifyToken(req, res, next) {
+function authMiddleware(req, res, next) {
     const token = req.header('Authorization');
     if (!token) return res.status(401).json({ error: 'Accesso negado' });
 
@@ -13,4 +13,4 @@ function verifyToken(req, res, next) {
     }
 }
 
-module.exports = verifyToken;
+module.exports = authMiddleware;
