@@ -30,6 +30,7 @@ Product.init({
   brand_id: {
     type: DataTypes.MEDIUMINT.UNSIGNED,
     allowNull: false,
+    references: {model: 'Brand', key: 'id'}
   }
 }, {
     modelName: 'Product',

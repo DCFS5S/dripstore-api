@@ -16,26 +16,30 @@ module.exports = {
         type: Sequelize.STRING
       },
       price: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(12)
       },
       description: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(1000)
       },
       brand_id: {
-        type: Sequelize.MEDIUMINT
+        type: Sequelize.MEDIUMINT,
+        references: {model: 'Brand', key: 'id'},
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW'),
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW'),
       }
     });
     await queryInterface.createTable('Brand', {
       id: {
         allowNull: false,
+        autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
@@ -43,18 +47,21 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING,
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW'),
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW'),
       }
     });
     await queryInterface.createTable('Category', {
       id: {
         allowNull: false,
+        autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
@@ -62,19 +69,40 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING,
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW'),
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW'),
       }
     });
+    await queryInterface.createTable('ProductCategory', {
+      id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        allowNull: false,
+        autoIncrement: true,
+      },
+      product_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: { model: 'Product', key: 'id' },
+      },
+      category_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: { model: 'Category', key: 'id' },
+      },
+    })
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Product');
     await queryInterface.dropTable('Brand');
     await queryInterface.dropTable('Category');
+    await queryInterface.dropTable('ProductCategory');
   },
 };
