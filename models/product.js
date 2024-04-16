@@ -1,40 +1,52 @@
 'use strict';
-const {Model, DataTypes} = require('sequelize');
-const sequelize = require('./index');
+const {Model} = require('sequelize');
 
-class Product extends Model {
+module.exports = (sequelize, DataTypes) => {
+  class Product extends Model {}
+
+  Product.init({
+    id: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    slug: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    price: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    brandId: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false,
+      references: {model: 'Brand', key: 'id'},
+      field: 'brand_id',
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      field: 'created_at',
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      field: 'updated_at',
+    },
+  }, {
+      modelName: 'Product',
+      tableName: 'Product',
+      sequelize,
+  });
+
+  return Product;
 }
-
-Product.init({
-  id: {
-    type: DataTypes.MEDIUMINT.UNSIGNED,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  slug: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  price: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  description: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  brand_id: {
-    type: DataTypes.MEDIUMINT.UNSIGNED,
-    allowNull: false,
-    references: {model: 'Brand', key: 'id'}
-  }
-}, {
-    modelName: 'Product',
-    sequelize,
-});
-
-module.exports = Product;

@@ -1,9 +1,8 @@
 const { getDBConnection } = require("../utils/getDBConnection");
-const Product = require("../models/Product")();
+const {Product, Category, Brand} = require("../models");
 
 const list = async (request, response) => {
-  const productList = await Product.getAll();
-
+  const productList = await Product.findAll();
   response.json({ products: productList });
 }
 

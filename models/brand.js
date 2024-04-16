@@ -1,24 +1,33 @@
 'use strict';
-const {Model, DataTypes} = require('sequelize');
-const sequelize = require('./index');
-const Product = require("./product");
+const {Model} = require('sequelize');
 
-class Brand extends Model {}
+module.exports = (sequelize, DataTypes) => {
+    class Brand extends Model {}
 
-Brand.init({
-    id: {
-        type: DataTypes.MEDIUMINT.UNSIGNED,
-        primaryKey: true,
-    },
-    name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-}, {
-    modelName: 'Brand',
-    sequelize
-})
+    Brand.init({
+        id: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            primaryKey: true,
+        },
+        name: {
+            type: DataTypes.STRING(128),
+            allowNull: false,
+        },
+        createdAt: {
+          type: DataTypes.DATE,
+          allowNull: false,
+          field: 'created_at',
+        },
+        updatedAt: {
+          type: DataTypes.DATE,
+          allowNull: false,
+          field: 'updated_at',
+        },
+    }, {
+        modelName: 'Brand',
+        tableName: 'Brand',
+        sequelize,
+    });
 
-Brand.hasMany(Product)
-
-module.exports = Brand;
+    return Brand;
+}

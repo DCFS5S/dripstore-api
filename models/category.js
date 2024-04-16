@@ -1,24 +1,33 @@
 'use strict';
-const {Model, DataTypes} = require('sequelize');
-const sequelize = require('./index');
-const Product = require("./product");
+const {Model} = require('sequelize');
 
-class Category extends Model {}
+module.exports = (sequelize, DataTypes) => {
+    class Category extends Model {}
+    
+    Category.init({
+        id: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            primaryKey: true,
+        },
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        createdAt: {
+          type: DataTypes.DATE,
+          allowNull: false,
+          field: 'created_at',
+        },
+        updatedAt: {
+          type: DataTypes.DATE,
+          allowNull: false,
+          field: 'updated_at',
+        },
+    }, {
+        modelName: 'Category',
+        tableName: 'Category',
+        sequelize
+    });
 
-Category.init({
-    id: {
-        type: DataTypes.MEDIUMINT.UNSIGNED,
-        primaryKey: true,
-    },
-    name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-}, {
-    modelName: 'Category',
-    sequelize
-})
-
-Category.belongsToMany(Product, {through: 'ProductCategory'});
-
-module.exports = Category;
+    return Category;
+}
