@@ -16,7 +16,7 @@ const login = async (request, response) => {
             return response.status(401).json({ error: 'Senha inválida' });
         }
 
-        const token = jwt.sign({ userId: user._id }, 'sua_chave_secreta', { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user.id }, 'sua_chave_secreta', { expiresIn: '1h' });
         
         response.json({ token });
     } catch (error) {
