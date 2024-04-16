@@ -4,6 +4,10 @@ const categoriesController = require('../controllers/categoriesController');
 const { Teste } = require('../models')
 
 const ordersController = require('../controllers/ordersController')
+const userController = require('../controllers/userController');
+const authController = require('../controllers/authController');
+// const authMiddleware = require('../middlewares/authMiddleware')
+
 
 router.get('/products', productController.list)
 router.get('/products/:productId', productController.show)
@@ -24,5 +28,7 @@ router.get('/test', async (req, res) => {
   const test = await Teste.findAll();
   res.json(test)
 })
+router.post('/register', userController.create)
+router.post('/login',authController.login)
 
 module.exports = router;
