@@ -8,3 +8,5 @@ function slugify(str) {
       .replace(/\s+/g, '-') // substitui os espaços por hiféns 
       .replace(/-+/g, '-'); // remove hiféns consecutivos 
   }
+
+module.exports = slugify

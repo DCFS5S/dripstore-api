@@ -1,4 +1,5 @@
-const { getDBConnection } = require("../utils/getDBConnection");
+const slugify = require("../utils/slugify")
+
 const {Product, Category, Brand} = require("../models");
 
 const list = async (request, response) => {
@@ -28,7 +29,7 @@ const create = async (request, response) => {
     console.log(finalSlug)
   }
 
-  const productId = await Product.createOne(name, price, description, finalSlug, brandId);
+  const productId = await Product.create({name, price, description, finalSlug, brandId});
   if (categories.length > 0) {
     Product.addCategory(productId, categories);
   }
