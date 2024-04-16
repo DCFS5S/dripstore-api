@@ -1,11 +1,13 @@
 const jwt = require('jsonwebtoken');
 
+require('dotenv').config();
+
 function authMiddleware(req, res, next) {
     const token = req.header('Authorization');
     if (!token) return res.status(401).json({ error: 'Accesso negado' });
 
     try {
-        const decoded = jwt.verify(token, 'sua_chave_secreta');
+        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
         req.userId = decoded.userId;
         next();
     } catch (error) {

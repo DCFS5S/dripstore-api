@@ -2,6 +2,8 @@ const { Model } = require('sequelize');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
+require('dotenv').config();
+
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
@@ -23,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
         throw new Error('Credenciais inválidas');
       }
 
-      const token = jwt.sign({ userId: user.id }, 'sua_chave_secreta', { expiresIn: '1h' });
+      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
       return token;
     }
   }
