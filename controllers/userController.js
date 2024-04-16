@@ -1,5 +1,6 @@
 const { User } = require("../models");
 const bcrypt = require('bcrypt');
+const { userSchema } = require('../validations/newUserValidation');
 
 const create = async (request, response) => {
     const {
@@ -16,6 +17,12 @@ const create = async (request, response) => {
     } = request.body;
     
     try {
+        const userData = { name, cpf, email, password, cel, address, neighborhood, city, zip, addressComplement };
+        const { error } = userSchema.validate(userData);
+        if (error) {
+            return response.status(400).json({ error: error.details[0].message });
+        }
+
         const hashedPassword = await bcrypt.hash(password, 10);
         
         await User.create({
