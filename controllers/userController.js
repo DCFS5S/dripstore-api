@@ -16,6 +16,11 @@ const create = async (request, response) => {
     } = request.body;
     
     try {
+        const existingUser = await User.findOne({ where: { email } });
+        if (existingUser) {
+            return response.status(400).json({ error: 'Endereço de e-mail já está em uso' });
+        }
+
         const hashedPassword = await bcrypt.hash(password, 10);
         
         await User.create({
