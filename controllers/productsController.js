@@ -1,5 +1,9 @@
-const { getDBConnection } = require("../utils/getDBConnection");
-const Product = require("../Product");
+const Product = {
+    getAll: async () => {},
+    getOne: async () => ({}),
+    createOne: async () => {},
+    addCategory: async () => {}
+}
 
 const list = async (request, response) => {
   const productList = await Product.getAll();
