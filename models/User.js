@@ -4,15 +4,6 @@ const bcrypt = require('bcrypt');
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
-    static associate(models) {
-      // Aqui você pode definir associações com outros modelos, se necessário
-    }
-
-    static async createUser(data) {
-      const newUser = await User.create(data);
-      return newUser;
-    }
-
     static async login(email, password) {
       const user = await User.findOne({ where: { email } });
       if (!user) {
