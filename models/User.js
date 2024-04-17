@@ -4,14 +4,6 @@ const bcrypt = require('bcrypt');
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
-    static associate(models) {
-      // Aqui você pode definir associações com outros modelos, se necessário
-    }
-
-    static async createUser(data) {
-      const newUser = await User.create(data);
-      return newUser;
-    }
 
     static async login(email, password) {
       const user = await User.findOne({ where: { email } });
@@ -20,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       }
       const isValidPassword = await bcrypt.compare(password, user.password);
       if (!isValidPassword) {
-        throw new Error('Credenciais inválidas');
+        throw new Error('Senha inválida');
       }
 
       const token = jwt.sign({ userId: user.id }, 'sua_chave_secreta', { expiresIn: '1h' });
@@ -35,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     password: DataTypes.STRING,
     phone: DataTypes.STRING,
     address: DataTypes.STRING,
-    neighbourhood: DataTypes.STRING,
+    neighborhood: DataTypes.STRING,
     city: DataTypes.STRING,
     zip: DataTypes.STRING,
     addressComplement: DataTypes.STRING,
