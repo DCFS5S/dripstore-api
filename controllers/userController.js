@@ -8,7 +8,7 @@ const create = async (request, response) => {
         cpf,
         email,
         password,
-        cel,
+        phone,
         address,
         neighborhood,
         city,
@@ -17,20 +17,29 @@ const create = async (request, response) => {
     } = request.body;
     
     try {
-        const userData = { name, cpf, email, password, cel, address, neighborhood, city, zip, addressComplement };
+        const userData = { name, cpf, email, password, phone, address, neighborhood, city, zip, addressComplement };
         const { error } = userSchema.validate(userData);
         if (error) {
             return response.status(400).json({ error: error.details[0].message });
         }
 
+        const existingEmail = await User.findOne({ where: { email } });
+        if (existingEmail) {
+            return response.status(400).json({ error: 'E-mail já cadastrado' });
+        }
+
+        const existingCpf = await User.findOne({ where: { cpf } });
+        if (existingCpf) {
+            return response.status(400).json({ error: 'CPF já cadastrado' });
+        }
+
         const hashedPassword = await bcrypt.hash(password, 10);
-        
         await User.create({
             name,
             cpf,
             email,
             password: hashedPassword,
-            cel,
+            phone,
             address,
             neighborhood,
             city,
