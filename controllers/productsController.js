@@ -9,7 +9,7 @@ const list = async (request, response) => {
 
 const show = async (request, response) => {
   const { productId } = request.params;
-  const selectedProduct = await Product.getOne(productId)
+  const selectedProduct = await Product.findByPk(productId);
 
   if (selectedProduct) {
     response.json(selectedProduct)
@@ -23,15 +23,16 @@ const show = async (request, response) => {
 
 const create = async (request, response) => {
   const { name, price, description, categories = [], slug = false, brandId } = request.body;
-  let finalSlug = "" 
+  let finalSlug = slug 
   if (!slug) {
     finalSlug = slugify(name)
     console.log(finalSlug)
   }
 
-  const productId = await Product.create({name, price, description, finalSlug, brandId});
+  const productId = await Product.create({name, price, description, slug: finalSlug, brandId});
   if (categories.length > 0) {
     Product.addCategory(productId, categories);
+    console.log(productId.toJSON)
   }
 
   response.status(201);
