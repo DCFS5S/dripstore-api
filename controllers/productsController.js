@@ -1,6 +1,7 @@
 const slugify = require("../utils/slugify")
 
 const {Product, Category, Brand} = require("../models");
+const product = require("../models/product");
 
 const list = async (request, response) => {
   const productList = await Product.findAll();
@@ -40,15 +41,10 @@ const create = async (request, response) => {
 }
 
 const remove = async (request, response) => {
-  const connection = await getDBConnection();
   const { productId } = request.params;
+  const result = await Product.destroy({where: {id: productId}}); 
 
-  const [results] = await connection.query(
-    'DELETE FROM product WHERE id = ?',
-    [productId]
-  );
-
-  if (results.affectedRows === 0) {
+  if (result.affectedRows === 0) {
     response.status(404)
     response.json({
       message: 'Produto não encontrado',
@@ -58,10 +54,11 @@ const remove = async (request, response) => {
       message: 'Produto removido com sucesso!',
     })
   }
+
 }
 
+
 const update = async (request, response) => {
-  const connection = await getDBConnection();
   const { productId } = request.params;
 
   const results = await connection.query(
