@@ -3,7 +3,7 @@ const slugify = require("../utils/slugify")
 const {Product, Category, Brand} = require("../models");
 
 const list = async (request, response) => {
-  const productList = await Product.findAll();
+  const productList = await Product.findAll({include: ['variants']});
   response.json({ products: productList });
 }
 

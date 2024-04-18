@@ -3,13 +3,13 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.bulkInsert('Brand', [
+    await queryInterface.bulkInsert('brand', [
       {name: 'Nike'},
       {name: 'Adidas'},
       {name: 'Puma'},
       {name: 'Klaus'},
     ]);
-    await queryInterface.bulkInsert('Product', [
+    await queryInterface.bulkInsert('product', [
       {
         name: 'Tenis Da Nike Para Teste',
         slug: 'tenis-da-nike-para-teste',
@@ -39,10 +39,10 @@ module.exports = {
         brand_id: 3,
       },
     ]);
-    await queryInterface.bulkInsert('Category', [
+    await queryInterface.bulkInsert('category', [
       {name: 'Tenis'},
     ]);
-    await queryInterface.bulkInsert('ProductCategory', [
+    await queryInterface.bulkInsert('product_category', [
       {product_id: 1, category_id: 1},
       {product_id: 2, category_id: 1},
       {product_id: 3, category_id: 1},
@@ -57,9 +57,9 @@ module.exports = {
      * await queryInterface.bulkDelete('People', null, {});
      */
 
-    await queryInterface.bulkDelete('Product', null, {});
-    await queryInterface.bulkDelete('Category', null, {});
-    await queryInterface.bulkDelete('Brand', null, {});
-    await queryInterface.bulkDelete('ProductCategory', null, {});
+    await queryInterface.bulkDelete('product', null, {});
+    await queryInterface.bulkDelete('category', null, {});
+    await queryInterface.bulkDelete('brand', null, {});
+    await queryInterface.bulkDelete('product_category', null, {});
   }
 };
