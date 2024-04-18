@@ -2,6 +2,8 @@ const { User } = require("../models");
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
+require('dotenv').config();
+
 const login = async (request, response) => {
     const { email, password } = request.body;
 
@@ -16,7 +18,7 @@ const login = async (request, response) => {
             return response.status(401).json({ error: 'Senha inválida' });
         }
 
-        const token = jwt.sign({ userId: user._id }, 'sua_chave_secreta', { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
         
         response.json({ token });
     } catch (error) {
