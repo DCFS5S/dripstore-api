@@ -1,6 +1,7 @@
 const { User } = require("../models");
 const bcrypt = require('bcrypt');
 const { userSchema } = require('../validations/newUserValidation');
+const { Op } = require("sequelize");
 
 const create = async (request, response) => {
     const {
@@ -23,14 +24,9 @@ const create = async (request, response) => {
             return response.status(400).json({ error: error.details[0].message });
         }
 
-        const existingEmail = await User.findOne({ where: { email } });
-        if (existingEmail) {
-            return response.status(400).json({ error: 'E-mail já cadastrado' });
-        }
-
-        const existingCpf = await User.findOne({ where: { cpf } });
-        if (existingCpf) {
-            return response.status(400).json({ error: 'CPF já cadastrado' });
+        const existingUser = await User.findOne({ where: { [Op.or]: [{ email }, { cpf }] }});
+        if (existingUser) {
+            return response.status(400).json({ error: 'Usuário já cadastrado' });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
