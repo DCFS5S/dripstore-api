@@ -5,8 +5,16 @@ module.exports = (sequelize, DataTypes) => {
   class Product extends Model {
     static associate(models) {
       Product.hasMany(models.ProductVariant, {
-        foreignKey: 'product_id',
+        foreignKey: 'productId',
         as: 'variants',
+      });
+
+      console.log(models);
+
+      Product.belongsToMany(models.Category, {
+        through: models.ProductCategory,
+        foreignKey: 'product_id',
+        as: 'categories',
       });
     }
   }
