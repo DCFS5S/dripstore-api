@@ -1,5 +1,4 @@
 const Joi = require('joi');
-const { User } = require('../models/User'); 
 
 const userSchema = Joi.object({
     name: Joi.string().required(),
@@ -14,21 +13,6 @@ const userSchema = Joi.object({
     addressComplement: Joi.string()
 });
 
-async function validateUserData(userData) {
-    const existingEmail = await User.findOne({ where: { email: userData.email } });
-    if (existingEmail) {
-        throw new Error('E-mail já cadastrado');
-    }
-
-    const existingCpf = await User.findOne({ where: { cpf: userData.cpf } });
-    if (existingCpf) {
-        throw new Error('CPF já cadastrado');
-    }
-
-    return userSchema.validate(userData);
-}
-
 module.exports = {
     userSchema,
-    validateUserData
 };
