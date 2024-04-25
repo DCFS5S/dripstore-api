@@ -132,9 +132,9 @@ module.exports = {
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('product_category');
+    await queryInterface.dropTable('product_variant');
     await queryInterface.dropTable('product');
     await queryInterface.dropTable('brand');
     await queryInterface.dropTable('category');
-    await queryInterface.dropTable('product_variant');
   },
 };

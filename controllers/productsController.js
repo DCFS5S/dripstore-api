@@ -4,7 +4,7 @@ const {Product, Category, Brand} = require("../models");
 const product = require("../models/product");
 
 const list = async (request, response) => {
-  const productList = await Product.findAll({include: ['variants', 'categories']});
+  const productList = await Product.findAll({include: ['categories']});
   response.json({ products: productList });
 }
 
