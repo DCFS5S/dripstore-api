@@ -7,7 +7,10 @@ require('dotenv').config();
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
-      // Aqui você pode definir associações com outros modelos, se necessário
+      User.hasMany(models.Order, {
+        foreignKey: 'userId',
+        as: 'orders'
+      })
     }
 
     static async createUser(data) {
