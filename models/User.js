@@ -6,19 +6,11 @@ require('dotenv').config();
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
-
-    static async login(email, password) {
-      const user = await User.findOne({ where: { email } });
-      if (!user) {
-        throw new Error('Usuário não encontrado');
-      }
-      const isValidPassword = await bcrypt.compare(password, user.password);
-      if (!isValidPassword) {
-        throw new Error('Senha inválida');
-      }
-
-      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
-      return token;
+    static associate(models) {
+      User.hasMany(models.Order, {
+        foreignKey: 'userId',
+        as: 'orders'
+      })
     }
   }
 
