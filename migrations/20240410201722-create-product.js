@@ -81,21 +81,17 @@ module.exports = {
       }
     });
     await queryInterface.createTable('product_category', {
-      id: {
-        type: Sequelize.INTEGER.UNSIGNED,
-        primaryKey: true,
-        allowNull: false,
-        autoIncrement: true,
-      },
       product_id: {
         type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
         references: { model: 'Product', key: 'id' },
+        primaryKey: true,
       },
       category_id: {
         type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
         references: { model: 'Category', key: 'id' },
+        primaryKey: true,
       },
     });
     await queryInterface.createTable('product_variant', {  
