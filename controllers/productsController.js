@@ -4,13 +4,27 @@ const {Product, Category, Brand} = require("../models");
 const product = require("../models/product");
 
 const list = async (request, response) => {
-  const productList = await Product.findAll({include: ['categories']});
+  const productList = await Product.findAll({include: [
+    {
+      model: Category,
+      as: 'categories',
+      attributes: ['id', 'name'],
+    },
+  ]});
+
   response.json({ products: productList });
 }
 
 const show = async (request, response) => {
   const { productId } = request.params;
-  const selectedProduct = await Product.findByPk(productId);
+  const selectedProduct = await Product.findByPk(productId, {include: [
+    'variants',
+    {
+      model: Category,
+      as: 'categories',
+      attributes: ['id', 'name'],
+    },
+  ]});
 
   if (selectedProduct) {
     response.json(selectedProduct)
@@ -30,10 +44,9 @@ const create = async (request, response) => {
     console.log(finalSlug)
   }
 
-  const productId = await Product.create({name, price, description, slug: finalSlug, brandId});
+  const product = await Product.create({name, price, description, slug: finalSlug, brandId});
   if (categories.length > 0) {
-    Product.addCategory(productId, categories);
-    console.log(productId.toJSON)
+    product.addCategories(categories);
   }
 
   response.status(201);
@@ -61,33 +74,27 @@ const remove = async (request, response) => {
 const update = async (request, response) => {
   const { productId } = request.params;
 
-  const results = await connection.query(
-    'SELECT name, price FROM product WHERE id = ?',
-    [productId]
-  );
+  const product = await Product.findByPk(productId);
 
-  const { name, price } = {
-    ...results[0][0],
-    ...request.body,
-  };
-
-  const [{ affectedRows }] = await connection.query(
-    'UPDATE product set name=?, price=? WHERE id = ? LIMIT 1',
-    [name, price, productId]
-  );
-
-
-  if (affectedRows === 0) {
+  if (!product) {
     response.status(404)
     response.json({
       message: 'Produto não encontrado',
-    })    
-  } else {
-    response.json({
-      message: 'Produto atualizado com sucesso!',
     })
+
+    return;
   }
 
+  for (const [key, value] of Object.entries(request.body)) {
+    product.set(key, value);
+  }
+
+  product.save();
+
+  response.status(204);
+  response.json({
+    message: 'Produto atualizado com sucesso!',
+  });
 }
 
 module.exports = {
