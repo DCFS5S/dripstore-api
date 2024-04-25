@@ -1,11 +1,12 @@
 'use strict';
 const {Model} = require('sequelize');
+const { ProductCategory } = require('./relations/productCategory');
 
 module.exports = (sequelize, DataTypes) => {
     class Category extends Model {
         static associate(models) {
             Category.belongsToMany(models.Product, {
-                through: models.ProductCategory,
+                through: ProductCategory,
                 foreignKey: 'category_id',
                 as: 'products',
             })

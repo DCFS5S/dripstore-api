@@ -1,5 +1,6 @@
 'use strict';
 const {Model} = require('sequelize');
+const { ProductCategory } = require('./relations/productCategory');
 
 module.exports = (sequelize, DataTypes) => {
   class Product extends Model {
@@ -9,10 +10,8 @@ module.exports = (sequelize, DataTypes) => {
         as: 'variants',
       });
 
-      console.log(models);
-
       Product.belongsToMany(models.Category, {
-        through: models.ProductCategory,
+        through: ProductCategory,
         foreignKey: 'product_id',
         as: 'categories',
       });
