@@ -4,33 +4,39 @@ const {Model} = require('sequelize');
 module.exports = (sequelize, DataTypes) =>{
     class ProductVariant extends Model {
         static associate(models) {
-            ProductVariant.belongsTo(models.Product, {  
+            ProductVariant.belongsTo(models.Product, {
                 foreignKey: 'productId',
                 as: 'parent',
-            })
+            });
+
+            ProductVariant.belongsTo(models.Variant, {
+                foreignKey: 'variant1',
+                as: 'detail1',
+            });
+
+            ProductVariant.belongsTo(models.Variant, {
+                foreignKey: 'variant2',
+                as: 'detail2',
+            });
         }
     }
 
     ProductVariant.init({
-        id: {
+        variant1: {
             type: DataTypes.INTEGER.UNSIGNED,
+            references: { model: 'variant', key: 'id' },
             primaryKey: true,
-            autoIncrement: true,
-        },
-        size: {
-            type: DataTypes.STRING(10),
-        },
-        colorName: {
-            type: DataTypes.STRING(32),
-            field:'color_name',
-        },
-        colorHex: {
-            type: DataTypes.STRING(6),
-            field: 'color_hex',
+            allowNull: false,
         },
         stock: {
             type: DataTypes.TINYINT,
             allowNull: false,
+        },
+        variant2: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            references: { model: 'variant', key: 'id' },
+            primaryKey: true,
+            allowNull: true,
         },
         productId: {
             type: DataTypes.INTEGER.UNSIGNED,

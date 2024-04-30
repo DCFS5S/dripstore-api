@@ -1,6 +1,6 @@
 const slugify = require("../utils/slugify")
 
-const {Product, Category, Brand} = require("../models");
+const {Product, Category, Brand, ProductVariant, Variant} = require("../models");
 const product = require("../models/product");
 
 const list = async (request, response) => {
@@ -13,12 +13,31 @@ const list = async (request, response) => {
   ]});
 
   response.json({ products: productList });
-}
+};
 
 const show = async (request, response) => {
   const { productId } = request.params;
   const selectedProduct = await Product.findByPk(productId, {include: [
-    'variants',
+    {
+      model: ProductVariant,
+      as: 'variants',
+      attributes: ['stock'],
+      include: [{
+        model: Variant,
+        as: 'detail1',
+        foreignKey: 'variant1'
+      }],
+    },
+    {
+      model: ProductVariant,
+      as: 'variants',
+      attributes: ['stock'],
+      include: [{
+        model: Variant,
+        as: 'detail2',
+        foreignKey: 'variant2'
+      }],
+    },
     {
       model: Category,
       as: 'categories',
