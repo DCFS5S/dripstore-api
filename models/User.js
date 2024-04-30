@@ -1,7 +1,4 @@
 const { Model } = require('sequelize');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-
 require('dotenv').config();
 
 module.exports = (sequelize, DataTypes) => {
@@ -9,8 +6,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       User.hasMany(models.Order, {
         foreignKey: 'userId',
-        as: 'orders'
-      })
+        as: 'orders',
+      });
     }
 
     static async createUser(data) {
@@ -40,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
     password: DataTypes.STRING,
     phone: DataTypes.STRING,
     address: DataTypes.STRING,
-    neighbourhood: DataTypes.STRING,
+    neighborhood: DataTypes.STRING,
     city: DataTypes.STRING,
     zip: DataTypes.STRING,
     addressComplement: DataTypes.STRING,
