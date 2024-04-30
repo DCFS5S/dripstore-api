@@ -1,7 +1,7 @@
-'use strict';
 const {
-  Model
+  Model,
 } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Product extends Model {
     /**
@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       Product.belongsToMany(models.Order, {
         as: 'orders',
         through: sequelize.define('ProductOrders', {
-          amount: DataTypes.INTEGER
+          amount: DataTypes.INTEGER,
         }),
       });
     }
@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
   Product.init({
     name: DataTypes.STRING,
     value: DataTypes.INTEGER,
-    discount: DataTypes.INTEGER
+    discount: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'Product',

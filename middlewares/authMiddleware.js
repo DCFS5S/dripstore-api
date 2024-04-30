@@ -1,18 +1,17 @@
 const jwt = require('jsonwebtoken');
-
 require('dotenv').config();
 
-function authMiddleware(req, res, next) {
-    const token = req.header('Authorization');
-    if (!token) return res.status(401).json({ error: 'Accesso negado' });
+function authMiddleware(request, response, next) {
+  const token = request.header('Authorization');
+  if (!token) return response.status(401).json({ error: 'Accesso negado' });
 
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-        req.userId = decoded.userId;
-        next();
-    } catch (error) {
-        res.status(401).json({ error: 'Token inválido' });
-    }
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    request.userId = decoded.userId;
+    return next();
+  } catch (error) {
+    return response.status(401).json({ error: 'Token inválido' });
+  }
 }
 
 module.exports = authMiddleware;
