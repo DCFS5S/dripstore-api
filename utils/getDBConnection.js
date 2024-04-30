@@ -10,6 +10,6 @@ const getDBConnection = async () => {
   });
 
   return connection;
-}
+};
 
 module.exports = { getDBConnection };

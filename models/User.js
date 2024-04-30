@@ -1,7 +1,4 @@
 const { Model } = require('sequelize');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-
 require('dotenv').config();
 
 module.exports = (sequelize, DataTypes) => {
@@ -9,8 +6,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       User.hasMany(models.Order, {
         foreignKey: 'userId',
-        as: 'orders'
-      })
+        as: 'orders',
+      });
     }
   }
 

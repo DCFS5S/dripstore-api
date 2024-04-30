@@ -1,32 +1,29 @@
-const { getDBConnection } = require("../utils/getDBConnection");
-
+const { getDBConnection } = require('../utils/getDBConnection');
 
 const list = async (request, response) => {
   const connection = await getDBConnection();
 
   const [results] = await connection.query(
-    'SELECT * FROM category'
+    'SELECT * FROM category',
   );
 
   response.json({ categories: results });
-}
+};
 
 const create = async (request, response) => {
   const connection = await getDBConnection();
   const { name } = request.body;
 
-  const [results] = await connection.query(
+  await connection.query(
     'INSERT INTO category (name) VALUES (?)',
-    [name]
+    [name],
   );
 
   response.status(201);
   response.json();
-}
-
-
+};
 
 module.exports = {
   create,
   list,
-}
+};
