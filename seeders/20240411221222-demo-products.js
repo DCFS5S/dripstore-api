@@ -47,6 +47,22 @@ module.exports = {
       {product_id: 2, category_id: 1},
       {product_id: 3, category_id: 1},
     ]);
+    await queryInterface.bulkInsert('variant', [
+      {product_id: 1, slug: 'color', value: 'ff3300', name: 'Vermelho'},
+      {product_id: 1, slug: 'color', value: '00ff00', name: 'Verde'},
+      {product_id: 1, slug: 'color', value: '0055ff', name: 'Azul'},
+      {product_id: 1, slug: 'size', value: 'P', name: 'P'},
+      {product_id: 1, slug: 'size', value: 'M', name: 'M'},
+      {product_id: 1, slug: 'size', value: 'G', name: 'G'},
+    ]);
+    await queryInterface.bulkInsert('product_variant', [
+      {product_id: 1, variant1: 1, variant2: 4, stock: 5},
+      {product_id: 1, variant1: 1, variant2: 5, stock: 25},
+      {product_id: 1, variant1: 1, variant2: 6, stock: 30},
+      {product_id: 1, variant1: 2, variant2: 4, stock: 15},
+      {product_id: 1, variant1: 2, variant2: 5, stock: 90},
+      {product_id: 1, variant1: 3, variant2: 4, stock: 100},
+    ]);
   },
 
   async down (queryInterface, Sequelize) {

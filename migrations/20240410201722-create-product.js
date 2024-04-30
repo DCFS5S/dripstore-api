@@ -94,45 +94,84 @@ module.exports = {
         primaryKey: true,
       },
     });
-    await queryInterface.createTable('product_variant', {  
+    await queryInterface.createTable('variant',{
       id: {
         type: Sequelize.INTEGER.UNSIGNED,
         primaryKey: true,
         autoIncrement: true,
-    },
-    size: {
-        type: Sequelize.STRING(10),
-    },
-    color_name: {
-        type: Sequelize.STRING(32),
-    },
-    color_hex: {
-        type: Sequelize.STRING(6),
-    },
-    stock: {
-        type: Sequelize.TINYINT,
+      },
+      slug: {
+        type: Sequelize.STRING(16),
         allowNull: false,
-    },
-    product_id: {
+      },
+      value: {
+        type: Sequelize.STRING(16),
+        allowNull: false,
+      },
+      name: {
+        type: Sequelize.STRING(16),
+        allowNull: false,
+      },
+      product_id: {
         type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
         references: { model: 'Product', key: 'id'},
-    },
-    created_at: {
-      allowNull: false,
-      type: Sequelize.DATE,
-      defaultValue: Sequelize.fn('NOW'),
-    },
-    updated_at: {
-      allowNull: false,
-      type: Sequelize.DATE,
-      defaultValue: Sequelize.fn('NOW'),
-    },
+      },
+      created_at: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW'),
+      },
+      updated_at: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW'),
+      },
+    });
+    await queryInterface.createTable('product_variant', {
+      variant1: {
+        type: Sequelize.INTEGER.UNSIGNED,
+        primaryKey: true,
+        allowNull: false,
+        references: {
+          model: 'variant',
+          key: 'id',
+        },
+      },
+      variant2: {
+        type: Sequelize.INTEGER.UNSIGNED,
+        primaryKey: true,
+        allowNull: true,
+        references: {
+          model: 'variant',
+          key: 'id',
+        },
+      },
+      stock: {
+        type: Sequelize.TINYINT,
+        allowNull: false,
+      },
+      product_id: {
+        type: Sequelize.INTEGER.UNSIGNED,
+        allowNull: false,
+        references: { model: 'Product', key: 'id'},
+      },
+      created_at: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW'),
+      },
+      updated_at: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW'),
+      },
     })
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('product_category');
     await queryInterface.dropTable('product_variant');
+    await queryInterface.dropTable('variant');
     await queryInterface.dropTable('product');
     await queryInterface.dropTable('brand');
     await queryInterface.dropTable('category');
