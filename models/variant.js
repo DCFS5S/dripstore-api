@@ -1,5 +1,5 @@
 'use strict';
-const {Model} = require('sequelize');
+const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   class Variant extends Model {
@@ -19,27 +19,15 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(16),
       allowNull: false,
     },
-    name: {
+    description: {
       type: DataTypes.STRING(16),
       allowNull: false,
-    },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    createdAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      field: 'created_at',
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      field: 'updated_at',
     },
   }, {
     modelName: 'Variant',
     tableName: 'variant',
+    createdAt: false,
+    updatedAt: false,
     sequelize
   });
 
