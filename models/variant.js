@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {
     modelName: 'Variant',
-    tableName: 'variant',
+    tableName: 'Variant',
     createdAt: false,
     updatedAt: false,
     sequelize

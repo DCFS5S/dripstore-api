@@ -1,29 +1,30 @@
 'use strict';
 const {Model} = require('sequelize');
-const { Sequelize } = require('.');
+const { Product, Variant } = require('./index');
 
 module.exports = (sequelize, DataTypes) =>{
     class ProductVariant extends Model {
-        static associate(models) {}
+        static associate(models) {
+            this.belongsTo(models.Product);
+            this.belongsTo(models.Variant);
+        }
     }
 
     ProductVariant.init({
-        VariantId: {
+        variantId: {
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: false,
             references: { model: 'Variant', key: 'id'},
-            field: 'variant_id',
         },
         productId: {
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: false,
             references: { model: 'Product', key: 'id'},
-            field: 'product_id',
         },
     }, {
         sequelize,
         modelName: 'ProductVariant',
-        tableName: 'product_variant',
+        tableName: 'ProductVariant',
         updatedAt: false,
         createdAt: false,
     });

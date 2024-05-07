@@ -1,5 +1,8 @@
 'use strict';
 
+const product = require('../models/product');
+const variant = require('../models/variant');
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
@@ -48,20 +51,19 @@ module.exports = {
       {productId: 3, categoryId: 1},
     ]);
     await queryInterface.bulkInsert('Variant', [
-      {productId: 1, slug: 'color', value: 'ff3300', name: 'Vermelho'},
-      {productId: 1, slug: 'color', value: '00ff00', name: 'Verde'},
-      {productId: 1, slug: 'color', value: '0055ff', name: 'Azul'},
-      {productId: 1, slug: 'size', value: 'P', name: 'P'},
-      {productId: 1, slug: 'size', value: 'M', name: 'M'},
-      {productId: 1, slug: 'size', value: 'G', name: 'G'},
+      {slug: 'color', value: 'ff3300', description: 'Vermelho'},
+      {slug: 'color', value: '00ff00', description: 'Verde'},
+      {slug: 'color', value: '0055ff', description: 'Azul'},
+      {slug: 'size', value: 'P', description: 'P'},
+      {slug: 'size', value: 'M', description: 'M'},
+      {slug: 'size', value: 'G', description: 'G'},
     ]);
     await queryInterface.bulkInsert('ProductVariant', [
-      {productId: 1, variant1: 1, variant2: 4, stock: 5},
-      {productId: 1, variant1: 1, variant2: 5, stock: 25},
-      {productId: 1, variant1: 1, variant2: 6, stock: 30},
-      {productId: 1, variant1: 2, variant2: 4, stock: 15},
-      {productId: 1, variant1: 2, variant2: 5, stock: 90},
-      {productId: 1, variant1: 3, variant2: 4, stock: 100},
+      {productId: 1, variantId: 2},
+      {productId: 1, variantId: 5},
+      {productId: 2, variantId: 4},
+      {productId: 2, variantId: 5},
+      {productId: 3, variantId: 4},
     ]);
   },
 
@@ -73,9 +75,9 @@ module.exports = {
      * await queryInterface.bulkDelete('People', null, {});
      */
 
-    await queryInterface.bulkDelete('product', null, {});
-    await queryInterface.bulkDelete('category', null, {});
-    await queryInterface.bulkDelete('brand', null, {});
-    await queryInterface.bulkDelete('product_category', null, {});
+    await queryInterface.bulkDelete('Product', null, {});
+    await queryInterface.bulkDelete('Category', null, {});
+    await queryInterface.bulkDelete('Brand', null, {});
+    await queryInterface.bulkDelete('ProductCategory', null, {});
   }
 };
