@@ -8,22 +8,20 @@ module.exports = (sequelize, DataTypes) =>{
     }
 
     ProductVariant.init({
-        VariantId: {
+        variantId: {
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: false,
             references: { model: 'Variant', key: 'id'},
-            field: 'variant_id',
         },
         productId: {
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: false,
             references: { model: 'Product', key: 'id'},
-            field: 'product_id',
         },
     }, {
         sequelize,
         modelName: 'ProductVariant',
-        tableName: 'product_variant',
+        tableName: 'ProductVariant',
         updatedAt: false,
         createdAt: false,
     });
