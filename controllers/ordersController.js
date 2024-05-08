@@ -6,7 +6,11 @@ const show = async (request, response) => {
     include: ['products', 'user'],
   });
 
-  response.json({ order });
+  if (order) {
+    return response.json({ order });
+  }
+
+  return response.status(404).json();
 };
 
 const addProduct = async (request, response) => {
