@@ -11,16 +11,12 @@ const list = async (request, response) => {
 
 const show = async (request, response) => {
   const { productId } = request.params;
-  const selectedProduct = await Product.findByPk(productId, {include: [
+  const selectedProduct = await Product.findByPk(productId, {include: ['variants']})/*, {include: [
     {
       model: ProductVariant,
       as: 'variants',
       attributes: ['stock'],
-      include: [{
-        model: Variant,
-        as: 'detail1',
-        foreignKey: 'variant1'
-      }],
+      include: [],
     },
     {
       model: ProductVariant,
@@ -37,7 +33,7 @@ const show = async (request, response) => {
       as: 'categories',
       attributes: ['id', 'name'],
     },
-  ]});
+  ]});*/
 
   if (selectedProduct) {
     response.json(selectedProduct)

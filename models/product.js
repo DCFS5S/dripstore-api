@@ -1,6 +1,5 @@
 'use strict';
 const { Model } = require('sequelize');
-// const { ProductCategory } = require('./relations/productCategory');
 
 module.exports = (sequelize, DataTypes) => {
   class Product extends Model {
@@ -54,21 +53,48 @@ module.exports = (sequelize, DataTypes) => {
       return product;
     }
 
-    static async findOneComplete(primaryKey) {
-      return await Product.findByPk(primaryKey, {
+    static list(options = {}, joinsWhereClauses = {}) {
+      delete options.include;
+      const findOptions = {
         include: [{
-          model: sequelize.models.Variant,
-          as: 'variants',
-          attributes: { exclude: ['createdAt', 'updatedAt'] },
-          through: { attributes: [] },
+          model: sequelize.models.Brand,
+          as: 'brand',
+          attributes: ['id', 'name'],
+          where: joinsWhereClauses?.brand,
         }, {
           model: sequelize.models.Category,
           as: 'categories',
           attributes: ['id', 'name'],
-          through: { attributes: [] },
+          through: {attributes: []},
+          where: joinsWhereClauses?.categories,
         }],
-        attributes: { exclude: ['createdAt', 'updatedAt'] }
-      });
+        attributes: { exclude: ['createdAt', 'updatedAt', 'brandId']},
+        ...options,
+      };
+      return Product.findAll(findOptions);
+    }
+
+    static listAll() {
+      return Product.list();
+    }
+
+    static listByCategory(id) {
+      return Product.list({}, { categories: {id} });
+    }
+
+    static listByBrand(id) {
+      return Product.list({}, { brand: {id} });
+    }
+
+    static showDetailed(id) {
+      return Product.find(id, {
+        include: [{
+          model: sequelize.models.Product,
+          as: 'variants',
+        // }, {
+        //   model: sequelize.models.Variant
+        }]
+      })
     }
   }
 
