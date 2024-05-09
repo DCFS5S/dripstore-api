@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER.UNSIGNED,
       primaryKey: true,
     },
-    slug: {
+    type: {
       type: DataTypes.STRING(16),
       allowNull: false,
     },
@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {
     modelName: 'Variant',
-    tableName: 'variant',
+    tableName: 'Variant',
     createdAt: false,
     updatedAt: false,
     sequelize

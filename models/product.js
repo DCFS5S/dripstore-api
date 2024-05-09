@@ -1,19 +1,73 @@
 'use strict';
-const {Model} = require('sequelize');
-const { ProductCategory } = require('./relations/productCategory');
+const { Model } = require('sequelize');
+// const { ProductCategory } = require('./relations/productCategory');
 
 module.exports = (sequelize, DataTypes) => {
   class Product extends Model {
     static associate(models) {
-      Product.hasMany(models.ProductVariant, {
-        foreignKey: 'productId',
+      Product.belongsToMany(models.Variant, {
+        as: 'details',
+        through: sequelize.define('ProductVariant', null, {
+          tableName: 'ProductVariant',
+        }),
+      });
+
+      Product.hasMany(models.Product, {
         as: 'variants',
+        foreignKey: 'parentId',
       });
 
       Product.belongsToMany(models.Category, {
-        through: ProductCategory,
-        foreignKey: 'productId',
         as: 'categories',
+        through: sequelize.define('ProductCategory', null, {
+          tableName: 'ProductCategory',
+        }),
+      });
+
+      Product.belongsTo(models.Brand, {
+        as: 'brand',
+        foreignKey: 'brandId',
+      });
+    }
+
+    static getOne(primaryKey) {
+      let product = Product.findOne({
+        attributes: { exclude: ['createdAt', 'updatedAt', 'brandId'] },
+        include: [{
+          model: sequelize.models.Brand,
+          as: 'brand',
+          attributes: ['id', 'name'],
+        }, {
+          model: sequelize.models.Category,
+          as: 'categories',
+          attributes: { exclude: ['createdAt', 'updatedAt'] },
+          through: { attributes: [] },
+        }, {
+          model: sequelize.models.Variant,
+          as: 'details',
+          attributes: { exclude: ['createdAt', 'updatedAt'] },
+          through: { attributes: [] },
+        }, 'variants'],
+        scope: { parentId: [primaryKey, null] },
+      });
+
+      return product;
+    }
+
+    static async findOneComplete(primaryKey) {
+      return await Product.findByPk(primaryKey, {
+        include: [{
+          model: sequelize.models.Variant,
+          as: 'variants',
+          attributes: { exclude: ['createdAt', 'updatedAt'] },
+          through: { attributes: [] },
+        }, {
+          model: sequelize.models.Category,
+          as: 'categories',
+          attributes: ['id', 'name'],
+          through: { attributes: [] },
+        }],
+        attributes: { exclude: ['createdAt', 'updatedAt'] }
       });
     }
   }
@@ -25,41 +79,50 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true,
     },
     name: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(160),
       allowNull: false,
     },
     slug: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(160),
       allowNull: false,
     },
     price: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(15),
       allowNull: false,
     },
     description: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(1000),
       allowNull: false,
     },
-    brandId: {
-      type: DataTypes.INTEGER.UNSIGNED,
+    stock: {
+      type: DataTypes.INTEGER,
       allowNull: false,
-      references: {model: 'Brand', key: 'id'},
-      field: 'brand_id',
+      defaultValue: 0,
     },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      field: 'created_at',
     },
     updatedAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      field: 'updated_at',
     },
   }, {
-      modelName: 'Product',
-      tableName: 'Product',
-      sequelize,
+    defaultScope: {
+      attributes: { exclude: ['createdAt', 'updatedAt'] },
+      include: [{
+        model: sequelize.models.Brand,
+        as: 'brand',
+        attributes: ['id', 'name'],
+      }, {
+        model: sequelize.models.Variant,
+        as: 'details',
+        attributes: ['id', 'type', 'value'],
+      }],
+    },
+    modelName: 'Product',
+    tableName: 'Product',
+    sequelize,
   });
 
   return Product;

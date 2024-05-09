@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('brand', {
+    await queryInterface.createTable('Brand', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -13,18 +13,18 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING(128),
       },
-      created_at: {
+      createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn('NOW'),
       },
-      updated_at: {
+      updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn('NOW'),
-      }
+      },
     });
-    await queryInterface.createTable('category', {
+    await queryInterface.createTable('Category', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -35,34 +35,36 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING(128),
       },
-      created_at: {
+      createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn('NOW'),
       },
-      updated_at: {
+      updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn('NOW'),
-      }
+      },
     });
-    await queryInterface.createTable('product', {
+    await queryInterface.createTable('Product', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER.UNSIGNED
       },
-      parent_id: {
+      parentId: {
         type: Sequelize.INTEGER.UNSIGNED,
-        references: { model: 'Product', key: 'id' },
+        tableName: 'Product',
+        key: 'id',
+        // references: { model: 'Product', key: 'id' },
       },
       name: {
-        type: Sequelize.STRING(140),
+        type: Sequelize.STRING(160),
         allowNull: false,
       },
       slug: {
-        type: Sequelize.STRING(128),
+        type: Sequelize.STRING(160),
         allowNull: false,
       },
       price: {
@@ -73,46 +75,61 @@ module.exports = {
       description: {
         type: Sequelize.STRING(1000),
       },
-      brand_id: {
+      brandId: {
         type: Sequelize.INTEGER.UNSIGNED,
-        references: {model: 'Brand', key: 'id'},
+        tableName: 'brand',
+        key: 'id',
+        // references: {model: 'Brand', key: 'id'},
       },
       stock: {
         type: Sequelize.TINYINT,
         defaultValue: 0,
       },
-      created_at: {
+      createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn('NOW'),
       },
-      updated_at: {
+      updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn('NOW'),
-      }
-    });
-    await queryInterface.createTable('product_category', {
-      product_id: {
-        type: Sequelize.INTEGER.UNSIGNED,
-        allowNull: false,
-        references: { model: 'Product', key: 'id' },
-        primaryKey: true,
-      },
-      category_id: {
-        type: Sequelize.INTEGER.UNSIGNED,
-        allowNull: false,
-        references: { model: 'Category', key: 'id' },
-        primaryKey: true,
       },
     });
-    await queryInterface.createTable('variant',{
+    await queryInterface.createTable('ProductCategory', {
+      productId: {
+        type: Sequelize.INTEGER.UNSIGNED,
+        allowNull: false,
+        tableName: 'product',
+        key: 'id',
+        // references: { model: 'Product', key: 'id' },
+        primaryKey: true,
+      },
+      categoryId: {
+        type: Sequelize.INTEGER.UNSIGNED,
+        allowNull: false,
+        tableName: 'Category',
+        key: 'id',
+        primaryKey: true,
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW'),
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW'),
+      },
+    });
+    await queryInterface.createTable('Variant',{
       id: {
         type: Sequelize.INTEGER.UNSIGNED,
         primaryKey: true,
         autoIncrement: true,
       },
-      slug: {
+      type: {
         type: Sequelize.STRING(16),
         allowNull: false,
       },
@@ -124,31 +141,63 @@ module.exports = {
         type: Sequelize.STRING(16),
         allowNull: false,
       },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW'),
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW'),
+      },
     });
-    await queryInterface.createTable('product_variant', {
+    await queryInterface.addConstraint('Variant', {
+      type: 'unique',
+      fields: ['type', 'value'],
+      name: 'variant_type_value_unique',
+    });
+    await queryInterface.createTable('ProductVariant', {
       id: {
         type: Sequelize.INTEGER.UNSIGNED,
         primaryKey: true,
         autoIncrement: true,
       },
-      product_id: {
+      productId: {
         type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
-        references: { model: 'Product', key: 'id' },
+        tableName: 'Product',
+        key: 'id',
       },
-      variant_id: {
+      variantId: {
         type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
-        references: { model: 'Variant', key: 'id' },
+        tableName: 'Variant',
+        key: 'id',
       },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW'),
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW'),
+      },
+    });
+    await queryInterface.addConstraint('ProductVariant', {
+      type: 'unique',
+      fields: ['productId', 'variantId'],
+      name: 'product_variant_unique',
     })
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('product_category');
-    await queryInterface.dropTable('product_variant');
-    await queryInterface.dropTable('variant');
-    await queryInterface.dropTable('product');
-    await queryInterface.dropTable('brand');
-    await queryInterface.dropTable('category');
+    await queryInterface.dropTable('ProductCategory');
+    await queryInterface.dropTable('ProductVariant');
+    await queryInterface.dropTable('Variant');
+    await queryInterface.dropTable('Product');
+    await queryInterface.dropTable('Brand');
+    await queryInterface.dropTable('Category');
   },
 };
