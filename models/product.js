@@ -29,30 +29,6 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
-    static getOne(primaryKey) {
-      let product = Product.findOne({
-        attributes: { exclude: ['createdAt', 'updatedAt', 'brandId'] },
-        include: [{
-          model: sequelize.models.Brand,
-          as: 'brand',
-          attributes: ['id', 'name'],
-        }, {
-          model: sequelize.models.Category,
-          as: 'categories',
-          attributes: { exclude: ['createdAt', 'updatedAt'] },
-          through: { attributes: [] },
-        }, {
-          model: sequelize.models.Variant,
-          as: 'details',
-          attributes: { exclude: ['createdAt', 'updatedAt'] },
-          through: { attributes: [] },
-        }, 'variants'],
-        scope: { parentId: [primaryKey, null] },
-      });
-
-      return product;
-    }
-
     static list(options = {}, joinsWhereClauses = {}) {
       delete options.include;
       const findOptions = {
@@ -68,7 +44,10 @@ module.exports = (sequelize, DataTypes) => {
           through: {attributes: []},
           where: joinsWhereClauses?.categories,
         }],
-        attributes: { exclude: ['createdAt', 'updatedAt', 'brandId']},
+        attributes: { exclude: ['createdAt', 'updatedAt', 'brandId', 'parentId'] },
+        where: sequelize.where(
+          sequelize.col('Product.parentId'), sequelize.col('Product.id')
+        ),
         ...options,
       };
       return Product.findAll(findOptions);
@@ -134,18 +113,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
   }, {
-    defaultScope: {
-      attributes: { exclude: ['createdAt', 'updatedAt'] },
-      include: [{
-        model: sequelize.models.Brand,
-        as: 'brand',
-        attributes: ['id', 'name'],
-      }, {
-        model: sequelize.models.Variant,
-        as: 'details',
-        attributes: ['id', 'type', 'value'],
-      }],
-    },
     modelName: 'Product',
     tableName: 'Product',
     sequelize,

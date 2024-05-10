@@ -24,6 +24,7 @@ module.exports = {
         defaultValue: Sequelize.fn('NOW'),
       },
     });
+
     await queryInterface.createTable('Category', {
       id: {
         allowNull: false,
@@ -46,6 +47,7 @@ module.exports = {
         defaultValue: Sequelize.fn('NOW'),
       },
     });
+
     await queryInterface.createTable('Product', {
       id: {
         allowNull: false,
@@ -55,9 +57,7 @@ module.exports = {
       },
       parentId: {
         type: Sequelize.INTEGER.UNSIGNED,
-        tableName: 'Product',
-        key: 'id',
-        // references: { model: 'Product', key: 'id' },
+        references: { model: 'Product', key: 'id' },
       },
       name: {
         type: Sequelize.STRING(160),
@@ -77,9 +77,7 @@ module.exports = {
       },
       brandId: {
         type: Sequelize.INTEGER.UNSIGNED,
-        tableName: 'brand',
-        key: 'id',
-        // references: {model: 'Brand', key: 'id'},
+        references: { model: 'Brand', key: 'id' },
       },
       stock: {
         type: Sequelize.TINYINT,
@@ -96,20 +94,18 @@ module.exports = {
         defaultValue: Sequelize.fn('NOW'),
       },
     });
+
     await queryInterface.createTable('ProductCategory', {
       productId: {
         type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
-        tableName: 'product',
-        key: 'id',
-        // references: { model: 'Product', key: 'id' },
+        references: { model: 'Product', key: 'id' },
         primaryKey: true,
       },
       categoryId: {
         type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
-        tableName: 'Category',
-        key: 'id',
+        references: { model: 'Category', key: 'id' },
         primaryKey: true,
       },
       createdAt: {
@@ -123,6 +119,7 @@ module.exports = {
         defaultValue: Sequelize.fn('NOW'),
       },
     });
+
     await queryInterface.createTable('Variant',{
       id: {
         type: Sequelize.INTEGER.UNSIGNED,
@@ -157,6 +154,7 @@ module.exports = {
       fields: ['type', 'value'],
       name: 'variant_type_value_unique',
     });
+
     await queryInterface.createTable('ProductVariant', {
       id: {
         type: Sequelize.INTEGER.UNSIGNED,
@@ -166,14 +164,12 @@ module.exports = {
       productId: {
         type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
-        tableName: 'Product',
-        key: 'id',
+        references: { model: 'Product', key: 'id' },
       },
       variantId: {
         type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
-        tableName: 'Variant',
-        key: 'id',
+        references: { model: 'Variant', key: 'id' },
       },
       createdAt: {
         allowNull: false,
@@ -190,7 +186,7 @@ module.exports = {
       type: 'unique',
       fields: ['productId', 'variantId'],
       name: 'product_variant_unique',
-    })
+    });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('ProductCategory');

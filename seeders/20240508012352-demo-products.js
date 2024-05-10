@@ -24,7 +24,8 @@ module.exports = {
         price: 20.50,
         description: 'Description for Product 1',
         brandId: 1,
-        stock: 10
+        stock: 10,
+        parentId: 1,
       },
       {
         name: 'Product 2',
@@ -33,7 +34,7 @@ module.exports = {
         description: 'Description for Product 2',
         brandId: 2,
         stock: 20,
-        parentId: 1
+        parentId: 1,
       },
       {
         name: 'Product 3',
@@ -41,7 +42,8 @@ module.exports = {
         price: 15.00,
         description: 'Description for Product 3',
         brandId: 3,
-        stock: 5
+        stock: 5,
+        parentId: 3
       },
       {
         name: 'Product 4',
@@ -50,7 +52,7 @@ module.exports = {
         description: 'Description for Product 4',
         brandId: 1,
         stock: 15,
-        parentId: 1
+        parentId: 1,
       },
       {
         name: 'Product 5',
@@ -58,7 +60,8 @@ module.exports = {
         price: 18.75,
         description: 'Description for Product 5',
         brandId: 2,
-        stock: 8
+        stock: 8,
+        parentId: 5,
       },
       {
         name: 'Product 6',
@@ -66,7 +69,8 @@ module.exports = {
         price: 22.00,
         description: 'Description for Product 6',
         brandId: 3,
-        stock: 12
+        stock: 12,
+        parentId: 6,
       },
       {
         name: 'Product 7',
@@ -74,7 +78,8 @@ module.exports = {
         price: 19.99,
         description: 'Description for Product 7',
         brandId: 1,
-        stock: 20
+        stock: 20,
+        parentId: 7,
       }
     ]);
 
