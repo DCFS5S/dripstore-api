@@ -1,14 +1,10 @@
-const { getDBConnection } = require("../utils/getDBConnection");
-
+const {Category} = require("../models");
 
 const list = async (request, response) => {
-  const connection = await getDBConnection();
 
-  const [results] = await connection.query(
-    'SELECT * FROM category'
-  );
+  const categories = await Category.findAll();
 
-  response.json({ categories: results });
+  response.json({ categories });
 }
 
 const create = async (request, response) => {
