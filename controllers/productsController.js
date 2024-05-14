@@ -3,37 +3,14 @@ const slugify = require("../utils/slugify")
 const {Product, Category, Brand, ProductVariant, Variant} = require("../models");
 
 const list = async (request, response) => {
-  const productList = await Product.listAll()
-  // const productList = await Product.findByPk(1)
+  const productList = await Product.listAll();
 
   response.json({ products: productList });
 };
 
 const show = async (request, response) => {
   const { productId } = request.params;
-  const selectedProduct = await Product.findByPk(productId, {include: ['variants']})/*, {include: [
-    {
-      model: ProductVariant,
-      as: 'variants',
-      attributes: ['stock'],
-      include: [],
-    },
-    {
-      model: ProductVariant,
-      as: 'variants',
-      attributes: ['stock'],
-      include: [{
-        model: Variant,
-        as: 'detail2',
-        foreignKey: 'variant2'
-      }],
-    },
-    {
-      model: Category,
-      as: 'categories',
-      attributes: ['id', 'name'],
-    },
-  ]});*/
+  const selectedProduct = await Product.findByPk(productId, { include: ['variants'] });
 
   if (selectedProduct) {
     response.json(selectedProduct)
@@ -46,8 +23,8 @@ const show = async (request, response) => {
 }
 
 const create = async (request, response) => {
-  const { name, price, description, categories = [], slug = false, brandId } = request.body;
-  let finalSlug = slug 
+  const { name, price, description, brandId, categories = [], slug = false, stock = 0, parentId = null } = request.body;
+  let finalSlug = slug
   if (!slug) {
     finalSlug = slugify(name)
     console.log(finalSlug)
@@ -78,7 +55,6 @@ const remove = async (request, response) => {
   }
 
 }
-
 
 const update = async (request, response) => {
   const { productId } = request.params;
