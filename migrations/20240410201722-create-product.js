@@ -1,4 +1,5 @@
 'use strict';
+const {sequelize} = require("../config/sequelize");
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -58,6 +59,7 @@ module.exports = {
       parentId: {
         type: Sequelize.INTEGER.UNSIGNED,
         references: { model: 'Product', key: 'id' },
+        default: sequelize.literal('GENERATED ALWAYS AS(id)'),
       },
       name: {
         type: Sequelize.STRING(160),
