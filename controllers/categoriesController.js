@@ -11,18 +11,16 @@ const create = async (request, response) => {
   const connection = await getDBConnection();
   const { name } = request.body;
 
-  const [results] = await connection.query(
+  await connection.query(
     'INSERT INTO category (name) VALUES (?)',
-    [name]
+    [name],
   );
 
   response.status(201);
   response.json();
-}
-
-
+};
 
 module.exports = {
   create,
   list,
-}
+};
