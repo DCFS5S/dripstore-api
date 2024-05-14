@@ -1,11 +1,14 @@
 const { Model } = require('sequelize');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-
 require('dotenv').config();
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
+    static associate(models) {
+      User.hasMany(models.Order, {
+        foreignKey: 'userId',
+        as: 'orders',
+      });
+    }
 
     static async login(email, password) {
       const user = await User.findOne({ where: { email } });
