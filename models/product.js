@@ -1,21 +1,22 @@
-'use strict';
 const { Model, Op } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   class Product extends Model {
-    static productsOptions= {
-      include: [{
-        model: sequelize.models.Brand,
-        as: 'brand',
-        attributes: ['id', 'name'],
-      }, {
-        model: sequelize.models.Category,
-        as: 'categories',
-        attributes: ['id', 'name'],
-        through: {attributes: []},
-      }],
-      attributes: { exclude: ['createdAt', 'updatedAt', 'brandId', 'parentId'] },
-    };
+    static productsOptions() {
+      return {
+        include: [{
+          model: sequelize.models.Brand,
+          as: 'brand',
+          attributes: ['id', 'name'],
+        }, {
+          model: sequelize.models.Category,
+          as: 'categories',
+          attributes: ['id', 'name'],
+          through: { attributes: [] },
+        }],
+        attributes: { exclude: ['createdAt', 'updatedAt', 'brandId', 'parentId'] },
+      };
+    }
 
     static associate(models) {
       Product.belongsToMany(models.Variant, {
@@ -52,6 +53,7 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static list(options = {}) {
+      // eslint-disable-next-line no-param-reassign
       delete options.include;
       const findOptions = {
         ...this.productsOptions,
@@ -79,7 +81,7 @@ module.exports = (sequelize, DataTypes) => {
     static showDetailed(id) {
       const options = {
         ...Product.productsOptions,
-      }
+      };
       options.include.push({
         model: sequelize.models.Product,
         as: 'variants',
@@ -135,4 +137,4 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   return Product;
-}
+};

@@ -1,10 +1,7 @@
-'use strict';
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class Variant extends Model {
-    static associate(models) {}
-  }
+  class Variant extends Model {}
 
   Variant.init({
     id: {
@@ -26,8 +23,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     modelName: 'Variant',
     tableName: 'Variant',
-    sequelize
+    sequelize,
   });
 
   return Variant;
-}
+};
