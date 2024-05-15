@@ -1,4 +1,4 @@
-const slugify = require("../utils/slugify")
+const slugify = require('../utils/slugify');
 
 const { Product } = require('../models');
 
@@ -13,20 +13,30 @@ const show = async (request, response) => {
   const selectedProduct = await Product.showDetailed(productId);
 
   if (selectedProduct) {
-    response.json(selectedProduct)
+    response.json(selectedProduct);
   } else {
-    response.status(404)
+    response.status(404);
     response.json({
-      error: 'Produto não encontrado'
-    })
+      error: 'Produto não encontrado',
+    });
   }
-}
+};
 
 const create = async (request, response) => {
-  const { name, price, description, brandId, categories = [], slug = false, stock = 0, parentId = null } = request.body;
-  let finalSlug = slug
+  const {
+    name,
+    price,
+    description,
+    brandId,
+    categories = [],
+    slug = false,
+    stock = 0,
+    parentId = null,
+  } = request.body;
+
+  let finalSlug = slug;
   if (!slug) {
-    finalSlug = slugify(name)
+    finalSlug = slugify(name);
   }
 
   const product = await Product.create({
@@ -38,24 +48,23 @@ const create = async (request, response) => {
 
   response.status(201);
   response.json();
-}
+};
 
 const remove = async (request, response) => {
   const { productId } = request.params;
   const result = await Product.destroy({ where: { id: productId } });
 
   if (result.affectedRows === 0) {
-    response.status(404)
+    response.status(404);
     response.json({
       message: 'Produto não encontrado',
-    })
+    });
   } else {
     response.json({
       message: 'Produto removido com sucesso!',
-    })
+    });
   }
-
-}
+};
 
 const update = async (request, response) => {
   const { productId } = request.params;
@@ -63,14 +72,15 @@ const update = async (request, response) => {
   const product = await Product.findByPk(productId);
 
   if (!product) {
-    response.status(404)
+    response.status(404);
     response.json({
       message: 'Produto não encontrado',
-    })
+    });
 
     return;
   }
 
+  // eslint-disable-next-line no-restricted-syntax
   for (const [key, value] of Object.entries(request.body)) {
     product.set(key, value);
   }
@@ -81,7 +91,7 @@ const update = async (request, response) => {
   response.json({
     message: 'Produto atualizado com sucesso!',
   });
-}
+};
 
 module.exports = {
   create,
@@ -89,4 +99,4 @@ module.exports = {
   list,
   remove,
   update,
-}
+};
