@@ -27,6 +27,11 @@ module.exports = (sequelize, DataTypes) => {
         as: 'brand',
         foreignKey: 'brandId',
       });
+
+      Product.hasMany(models.ProductImage, {
+        as: 'images',
+        foreignKey: 'productId',
+      });
     }
 
     static list(options = {}, joinsWhereClauses = {}) {
@@ -70,8 +75,6 @@ module.exports = (sequelize, DataTypes) => {
         include: [{
           model: sequelize.models.Product,
           as: 'variants',
-        // }, {
-        //   model: sequelize.models.Variant
         }]
       })
     }
