@@ -1,16 +1,16 @@
 const slugify = require("../utils/slugify")
 
-const {Product, Category, Brand, ProductVariant, Variant} = require("../models");
+const { Product } = require('../models');
 
 const list = async (request, response) => {
   const productList = await Product.listAll();
 
-  response.json({ products: productList });
+  response.json(productList);
 };
 
 const show = async (request, response) => {
   const { productId } = request.params;
-  const selectedProduct = await Product.findByPk(productId, { include: ['variants'] });
+  const selectedProduct = await Product.showDetailed(productId);
 
   if (selectedProduct) {
     response.json(selectedProduct)
@@ -27,10 +27,11 @@ const create = async (request, response) => {
   let finalSlug = slug
   if (!slug) {
     finalSlug = slugify(name)
-    console.log(finalSlug)
   }
 
-  const product = await Product.create({name, price, description, slug: finalSlug, brandId});
+  const product = await Product.create({
+    name, price, description, slug: finalSlug, brandId, stock, parentId,
+  });
   if (categories.length > 0) {
     product.addCategories(categories);
   }
@@ -41,13 +42,13 @@ const create = async (request, response) => {
 
 const remove = async (request, response) => {
   const { productId } = request.params;
-  const result = await Product.destroy({where: {id: productId}}); 
+  const result = await Product.destroy({ where: { id: productId } });
 
   if (result.affectedRows === 0) {
     response.status(404)
     response.json({
       message: 'Produto não encontrado',
-    })    
+    })
   } else {
     response.json({
       message: 'Produto removido com sucesso!',

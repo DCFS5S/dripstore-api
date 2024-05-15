@@ -1,8 +1,22 @@
 'use strict';
-const { Model } = require('sequelize');
+const { Model, Op } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   class Product extends Model {
+    static productsOptions= {
+      include: [{
+        model: sequelize.models.Brand,
+        as: 'brand',
+        attributes: ['id', 'name'],
+      }, {
+        model: sequelize.models.Category,
+        as: 'categories',
+        attributes: ['id', 'name'],
+        through: {attributes: []},
+      }],
+      attributes: { exclude: ['createdAt', 'updatedAt', 'brandId', 'parentId'] },
+    };
+
     static associate(models) {
       Product.belongsToMany(models.Variant, {
         as: 'details',
@@ -14,6 +28,9 @@ module.exports = (sequelize, DataTypes) => {
       Product.hasMany(models.Product, {
         as: 'variants',
         foreignKey: 'parentId',
+        where: {
+          parentId: { [Op.ne]: sequelize.col('variants.id') },
+        },
       });
 
       Product.belongsToMany(models.Category, {
@@ -34,25 +51,10 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
-    static list(options = {}, joinsWhereClauses = {}) {
+    static list(options = {}) {
       delete options.include;
       const findOptions = {
-        include: [{
-          model: sequelize.models.Brand,
-          as: 'brand',
-          attributes: ['id', 'name'],
-          where: joinsWhereClauses?.brand,
-        }, {
-          model: sequelize.models.Category,
-          as: 'categories',
-          attributes: ['id', 'name'],
-          through: {attributes: []},
-          where: joinsWhereClauses?.categories,
-        }],
-        attributes: { exclude: ['createdAt', 'updatedAt', 'brandId', 'parentId'] },
-        where: sequelize.where(
-          sequelize.col('Product.parentId'), sequelize.col('Product.id')
-        ),
+        ...this.productsOptions,
         ...options,
       };
       return Product.findAll(findOptions);
@@ -63,20 +65,31 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static listByCategory(id) {
-      return Product.list({}, { categories: {id} });
+      return Product.list({
+        where: { '$categories->ProductCategory.CategoryId$': id },
+      });
     }
 
     static listByBrand(id) {
-      return Product.list({}, { brand: {id} });
+      return Product.list({
+        where: { brandId: id },
+      });
     }
 
     static showDetailed(id) {
-      return Product.find(id, {
-        include: [{
-          model: sequelize.models.Product,
-          as: 'variants',
-        }]
-      })
+      const options = {
+        ...Product.productsOptions,
+      }
+      options.include.push({
+        model: sequelize.models.Product,
+        as: 'variants',
+        attributes: { exclude: ['createdAt', 'updatedAt', 'brandId', 'parentId'] },
+        where: {
+          parentId: { [Op.ne]: sequelize.col('variants.id') },
+        },
+      });
+
+      return Product.findByPk(id, options);
     }
   }
 
