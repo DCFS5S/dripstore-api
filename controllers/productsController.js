@@ -1,6 +1,6 @@
 const slugify = require('../utils/slugify');
 
-const { Product } = require('../models');
+const { Product, ProductImage } = require('../models');
 
 const list = async (request, response) => {
   const productList = await Product.listAll();
@@ -29,6 +29,7 @@ const create = async (request, response) => {
     description,
     brandId,
     categories = [],
+    images = [],
     slug = false,
     stock = 0,
     parentId = null,
@@ -44,6 +45,9 @@ const create = async (request, response) => {
   });
   if (categories.length > 0) {
     product.addCategories(categories);
+  }
+  if (images.length > 0) {
+    ProductImage.bulkCreate(images.map((url) => ({ url, productId: product.id })));
   }
 
   response.status(201);

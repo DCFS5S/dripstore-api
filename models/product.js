@@ -63,7 +63,7 @@ module.exports = (sequelize, DataTypes) => {
       // eslint-disable-next-line no-param-reassign
       delete options.include;
       const findOptions = {
-        ...this.productsOptions,
+        ...this.productsOptions(),
         ...options,
       };
       return Product.findAll(findOptions);
@@ -87,7 +87,11 @@ module.exports = (sequelize, DataTypes) => {
 
     static showDetailed(id) {
       const options = {
-        ...Product.productsOptions,
+        ...this.productsOptions(),
+        where: {
+          id,
+          parentId: { [Op.or]: [null, id] },
+        },
       };
       options.include.push({
         model: sequelize.models.Product,
@@ -96,9 +100,10 @@ module.exports = (sequelize, DataTypes) => {
         where: {
           parentId: { [Op.ne]: sequelize.col('variants.id') },
         },
+        required: false,
       });
 
-      return Product.findByPk(id, options);
+      return Product.findOne(options);
     }
   }
 
