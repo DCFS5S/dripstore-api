@@ -1,8 +1,7 @@
-'use strict';
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Variant',{
+    await queryInterface.createTable('Variant', {
       id: {
         type: Sequelize.INTEGER.UNSIGNED,
         primaryKey: true,
@@ -37,6 +36,7 @@ module.exports = {
       name: 'variant_type_value_unique',
     });
   },
-  async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Variant');}
-}
+  async down(queryInterface) {
+    await queryInterface.dropTable('Variant');
+  },
+};
