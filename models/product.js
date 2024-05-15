@@ -19,6 +19,13 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static associate(models) {
+      Product.belongsToMany(models.Order, {
+        as: 'orders',
+        through: sequelize.define('ProductOrders', {
+          amount: DataTypes.INTEGER,
+        }),
+      });
+
       Product.belongsToMany(models.Variant, {
         as: 'details',
         through: sequelize.define('ProductVariant', null, {
