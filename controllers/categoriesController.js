@@ -9,9 +9,7 @@ const list = async (request, response) => {
 const create = async (request, response) => {
   const { name } = request.body;
   try {
-    await Category.findOrCreate({
-      where: { name },
-    });
+    await Category.create({ name });
     response.status(201);
   } catch (error) {
     response.status(500);
