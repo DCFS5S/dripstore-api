@@ -1,13 +1,16 @@
 const createError = require('http-errors');
+const cors = require('cors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+
 const logger = require('morgan');
 
 const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
 const usersRouter = require('./routes/users');
 const ordersRouter = require('./routes/orders');
+// const productsRouter = require('./routes/products');
 
 const app = express();
 
@@ -15,6 +18,7 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -25,6 +29,7 @@ app.use('/', indexRouter);
 app.use('/auth', authRouter);
 app.use('/users', usersRouter);
 app.use('/orders', ordersRouter);
+// app.use('/products', productsRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
