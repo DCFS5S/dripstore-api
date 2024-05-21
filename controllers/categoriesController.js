@@ -42,5 +42,7 @@ const update = async (request, response) => {
 
 module.exports = {
   create,
+  show,
   list,
+  update,
 };
