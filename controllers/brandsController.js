@@ -10,7 +10,7 @@ const show = async (request, response) => {
   const { id } = request.params;
   const brand = await Brand.find(id);
 
-  if(brand.length > 0) {
+  if (brand.length > 0) {
     response.json(brand);
   } else {
     response.status(404);
@@ -34,8 +34,8 @@ const update = async (request, response) => {
   const { id } = request.params;
   const { name } = request.body;
 
-  const category = await Brand.find(id);
-  Brand.set({ name });
+  const brand = await Brand.find(id);
+  brand.set({ name });
 
   response.status(204);
 };

@@ -10,7 +10,7 @@ const show = async (request, response) => {
   const { id } = request.params;
   const category = await Category.find(id);
 
-  if(category.length > 0) {
+  if (category.length > 0) {
     response.json(category);
   } else {
     response.status(404);
