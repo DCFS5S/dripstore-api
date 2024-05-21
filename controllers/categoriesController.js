@@ -6,6 +6,18 @@ const list = async (request, response) => {
   response.json({ categories });
 };
 
+const show = async (request, response) => {
+  const { id } = request.params;
+  const category = await Category.find(id);
+
+  if(category.length > 0) {
+    response.json(category);
+  } else {
+    response.status(404);
+    response.json();
+  }
+};
+
 const create = async (request, response) => {
   const { name } = request.body;
   try {
@@ -16,6 +28,16 @@ const create = async (request, response) => {
   }
 
   response.json();
+};
+
+const update = async (request, response) => {
+  const { id } = request.params;
+  const { name } = request.body;
+
+  const category = await Category.find(id);
+  category.set({ name });
+
+  response.status(204);
 };
 
 module.exports = {
