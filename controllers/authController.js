@@ -18,7 +18,11 @@ const login = async (request, response) => {
       return response.status(401).json({ error: 'Senha inválida' });
     }
 
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
+    const token = jwt.sign(
+      { userId: user.id },
+      process.env.JWT_SECRET_KEY,
+      { expiresIn: '1h' },
+    );
 
     return response.json({ token });
   } catch (error) {

@@ -22,12 +22,16 @@ const show = async (request, response) => {
 };
 
 const addProduct = async (request, response) => {
-  const { orderId } = request.params;
   const { productId } = request.body;
 
-  const order = orderId
-    ? await Order.findByPk(orderId, { include: 'products' })
-    : await Order.create({ status: 'draft' });
+  let order = await Order.findOne({
+    where: { userId: request.userId, status: 'draft' },
+    include: 'products',
+  });
+
+  if (!order) {
+    order = await Order.create({ userId: request.userId, status: 'draft' });
+  }
 
   const [product] = await order.getProducts({ where: { id: productId } });
 
