@@ -8,7 +8,7 @@ const list = async (request, response) => {
   return response.json({ orders });
 };
 
-const show = async (request, response) => {
+const showCart = async (request, response) => {
   const order = await Order.findOne({
     where: { id: request.params.orderId },
     include: ['products', 'user'],
@@ -24,13 +24,17 @@ const show = async (request, response) => {
 const addProduct = async (request, response) => {
   const { productId } = request.body;
 
+  const userQuery = request.userId
+    ? { userId: request.userId }
+    : { guestId: request.guestId };
+
   let order = await Order.findOne({
-    where: { userId: request.userId, status: 'draft' },
+    where: { ...userQuery, status: 'draft' },
     include: 'products',
   });
 
   if (!order) {
-    order = await Order.create({ userId: request.userId, status: 'draft' });
+    order = await Order.create({ ...userQuery, status: 'draft' });
   }
 
   const [product] = await order.getProducts({ where: { id: productId } });
@@ -49,10 +53,16 @@ const addProduct = async (request, response) => {
 };
 
 const removeProduct = async (request, response) => {
-  const { orderId } = request.params;
   const { productId } = request.body;
 
-  const order = await Order.findByPk(orderId);
+  const userQuery = request.userId
+    ? { userId: request.userId }
+    : { guestId: request.guestId };
+
+  const order = await Order.findOne({
+    where: { ...userQuery, status: 'draft' },
+    include: 'products',
+  });
 
   const [product] = await order.getProducts({ where: { id: productId } });
 
@@ -72,8 +82,8 @@ const removeProduct = async (request, response) => {
 };
 
 module.exports = {
-  show,
+  list,
+  showCart,
   addProduct,
   removeProduct,
-  list,
 };
