@@ -1,17 +1,17 @@
-const { Category } = require('../models');
+const { Brand } = require('../models');
 
 const list = async (request, response) => {
-  const categories = await Category.findAll();
+  const brands = await Brand.findAll();
 
-  response.json({ categories });
+  response.json({ brands });
 };
 
 const show = async (request, response) => {
   const { id } = request.params;
-  const category = await Category.find(id);
+  const brand = await Brand.find(id);
 
-  if (category.length > 0) {
-    response.json(category);
+  if (brand.length > 0) {
+    response.json(brand);
   } else {
     response.status(404);
     response.json();
@@ -21,7 +21,7 @@ const show = async (request, response) => {
 const create = async (request, response) => {
   const { name } = request.body;
   try {
-    await Category.create({ name });
+    await Brand.create({ name });
     response.status(201);
   } catch (error) {
     response.status(500);
@@ -34,15 +34,15 @@ const update = async (request, response) => {
   const { id } = request.params;
   const { name } = request.body;
 
-  const category = await Category.find(id);
-  category.set({ name });
+  const brand = await Brand.find(id);
+  brand.set({ name });
 
   response.status(204);
 };
 
 module.exports = {
   create,
-  show,
   list,
+  show,
   update,
 };

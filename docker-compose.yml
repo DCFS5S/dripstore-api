@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  mysqldb:
+    image: mysql:8.3
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
+    ports:
+      - 3008:3306
+    volumes:
+      - db:/var/lib/mysql
+
+  phpmyadmin:
+    depends_on:
+      - mysqldb
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8090:80
+    env_file:
+      - ./.env
+    environment:
+      - PMA_HOST=mysqldb
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+
+volumes:
+  db:
+
